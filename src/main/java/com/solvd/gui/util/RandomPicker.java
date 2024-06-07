@@ -1,4 +1,4 @@
-package com.solvd.util;
+package com.solvd.gui.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

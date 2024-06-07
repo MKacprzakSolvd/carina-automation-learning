@@ -1,7 +1,7 @@
-package com.solvd.components;
+package com.solvd.gui.components;
 
 import com.solvd.enums.ProductCategory;
-import com.solvd.pages.ProductsPage;
+import com.solvd.gui.pages.common.ProductsPageBase;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
 import org.openqa.selenium.SearchContext;
@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
 // TODO: consider moving to ProductsPage (as static nested class)
-public class ProductFilter extends AbstractUIObject {
+public class ProductFilterBase extends AbstractUIObject {
     @FindBy(className = "swatch-option")
     private List<ExtendedWebElement> options;
 
@@ -19,7 +19,7 @@ public class ProductFilter extends AbstractUIObject {
     private ExtendedWebElement title;
 
 
-    public ProductFilter(WebDriver driver, SearchContext searchContext) {
+    public ProductFilterBase(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
     }
 
@@ -45,12 +45,12 @@ public class ProductFilter extends AbstractUIObject {
         return getRootExtendedElement().getAttribute("class").contains("active");
     }
 
-    public ProductsPage filterBy(String option, ProductCategory productCategory) {
+    public ProductsPageBase filterBy(String option, ProductCategory productCategory) {
         for (ExtendedWebElement optionElement : options) {
             if (optionElement.getAttribute("option-label").equals(option)) {
                 expand();
                 optionElement.click();
-                return new ProductsPage(getDriver(), productCategory);
+                return initPage(getDriver(), ProductsPageBase.class, productCategory);
             }
         }
         throw new IllegalArgumentException("Option not found: " + option);

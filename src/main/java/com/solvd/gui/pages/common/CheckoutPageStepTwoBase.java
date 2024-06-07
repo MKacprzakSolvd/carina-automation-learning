@@ -1,4 +1,4 @@
-package com.solvd.pages;
+package com.solvd.gui.pages.common;
 
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class CheckoutPageStepTwo extends AbstractPage {
+public abstract class CheckoutPageStepTwoBase extends AbstractPage {
     @FindBy(css = "#checkout-payment-method-load [type='submit']")
     private ExtendedWebElement placeOrderButton;
 
@@ -18,20 +18,19 @@ public class CheckoutPageStepTwo extends AbstractPage {
     @FindBy(css = "#checkout-payment-method-load .payment-method-content")
     private ExtendedWebElement orderAddressWrapper;
 
-    public CheckoutPageStepTwo(WebDriver driver) {
+    public CheckoutPageStepTwoBase(WebDriver driver) {
         super(driver);
+        //waitForJSToLoad();
         waitTillPageLoads();
     }
 
-    public CheckoutPageStepThree placeOrder() {
+    public CheckoutPageStepThreeBase placeOrder() {
         this.placeOrderButton.click();
-        return new CheckoutPageStepThree(getDriver());
+        return initPage(getDriver(), CheckoutPageStepThreeBase.class);
     }
 
     private void waitTillPageLoads() {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("body > div.loading-mask")));
-        wait.until(ExpectedConditions.elementToBeClickable(this.placeOrderButton));
-        wait.until(ExpectedConditions.visibilityOf(this.orderAddressWrapper));
     }
 }

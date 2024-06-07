@@ -1,15 +1,16 @@
 package com.solvd;
 
-import com.solvd.components.ProductCard;
+
 import com.solvd.enums.ProductCategory;
 import com.solvd.enums.ProductsFilter;
 import com.solvd.enums.ShippingMethod;
 import com.solvd.enums.SortOrder;
+import com.solvd.gui.components.ProductCardBase;
+import com.solvd.gui.pages.common.*;
+import com.solvd.gui.util.RandomPicker;
 import com.solvd.model.Product;
 import com.solvd.model.Review;
 import com.solvd.model.ShippingInfo;
-import com.solvd.pages.*;
-import com.solvd.util.RandomPicker;
 import com.zebrunner.carina.core.AbstractTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,10 +64,10 @@ public class WebTest extends AbstractTest {
     public void verifyProductSearchTest() {
         // TODO ! add asserts
         // TODO: move url's to separate file
-        HomePage homePage = new HomePage(getDriver());
+        HomePageBase homePage = initPage(getDriver(), HomePageBase.class);
         homePage.open();
         homePage.assertPageOpened();
-        SearchPage searchPage = homePage.searchForProduct("bag");
+        SearchPageBase searchPage = homePage.searchForProduct("bag");
         for (var productCard : searchPage.getProductCards()) {
             LOGGER.info("Product name: " + productCard.getProductData().getName());
         }
@@ -78,7 +79,7 @@ public class WebTest extends AbstractTest {
     // TODO: add test case description (steps, etc)
     public void verifySizeColorFiltersTest() {
         // open products page
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.WOMEN_TOPS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.WOMEN_TOPS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -91,7 +92,7 @@ public class WebTest extends AbstractTest {
         // make sure every element is available in given size
         // FIXME: check it on all pages
         SoftAssert softAssert = new SoftAssert();
-        for (ProductCard productCard : productsPage.getProductCards()) {
+        for (ProductCardBase productCard : productsPage.getProductCards()) {
             softAssert.assertTrue(productCard.isAvailableInSize(randomSizeOption),
                     "Product: %s is not available in size '%s'".formatted(productCard.getProductName(), randomSizeOption));
         }
@@ -105,7 +106,7 @@ public class WebTest extends AbstractTest {
         // make sure every element is avaliable in given color and size
         // FIXME: check it on all pages
         // TODO: test for case when no elements found with selected filters
-        for (ProductCard productCard : productsPage.getProductCards()) {
+        for (ProductCardBase productCard : productsPage.getProductCards()) {
             softAssert.assertTrue(productCard.isAvailableInSize(randomSizeOption),
                     "Product: %s is not available in size '%s;".formatted(productCard.getProductName(), randomSizeOption));
             softAssert.assertTrue(productCard.isAvailableInColor(randomColorOption),
@@ -121,7 +122,7 @@ public class WebTest extends AbstractTest {
         SoftAssert softAssert = new SoftAssert();
 
         // open products page
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.MEN_TOPS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_TOPS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -131,7 +132,7 @@ public class WebTest extends AbstractTest {
 
         // add them to cart & check if they were added
         for (Product product : selectedProducts) {
-            Optional<ProductCard> productCard = productsPage.findProductCard(product);
+            Optional<ProductCardBase> productCard = productsPage.findProductCard(product);
             softAssert.assertTrue(productCard.isPresent(),
                     "Unable to find product card corresponding to product '%s' in products page"
                             .formatted(product.getName()));
@@ -163,19 +164,19 @@ public class WebTest extends AbstractTest {
     @Test(dataProvider = "provideValidShippingInfo")
     public void verifyCheckoutProcessFromProductsPageTest(ShippingInfo shippingInfo) {
         // open products page
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.GEAR_BAGS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);
         productsPage.open();
         productsPage.assertPageOpened();
 
         // select random item, add it to the cart and go to checkout
-        ProductCard selectedProductCard = RandomPicker.getRandomElement(productsPage.getProductCards());
+        ProductCardBase selectedProductCard = RandomPicker.getRandomElement(productsPage.getProductCards());
         Product selectedProduct = selectedProductCard.getProductData();
         selectedProductCard.addToCart();
         // TODO: check if cart contains exactly one product
         assertTrue(productsPage.getShoppingCart().isProductInCart(selectedProduct),
                 "Selected product (%s) was not in the cart (on products page)."
                         .formatted(selectedProduct.getName()));
-        CheckoutPageStepOne checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
+        CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
 
         // complete first step of checkout
         int productsInShoppingCart = checkoutPageStepOne.getProductsCount();
@@ -187,17 +188,18 @@ public class WebTest extends AbstractTest {
                         .formatted(selectedProduct.getName()));
 
         // TODO read this data from some config
-        CheckoutPageStepTwo checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
 
-        CheckoutPageStepThree checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
-        HomePage homePage = checkoutPageStepThree.returnToHomePage();
+        CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
+        HomePageBase homePage = checkoutPageStepThree.returnToHomePage();
+        homePage.assertPageOpened();
     }
 
     @Test
     public void verifyItemSortingTest() {
         SoftAssert softAssert = new SoftAssert();
 
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.WOMEN_BOTTOMS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.WOMEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -226,17 +228,17 @@ public class WebTest extends AbstractTest {
 
     @Test(dataProvider = "provideValidShippingInfo")
     public void verifyCheckoutFromItemDetailsPageTest(ShippingInfo shippingInfo) {
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.MEN_BOTTOMS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
 
         // select random product
-        ProductCard selectedProductCard = RandomPicker.getRandomElement(
+        ProductCardBase selectedProductCard = RandomPicker.getRandomElement(
                 productsPage.getProductCards());
         Product selectedProduct = selectedProductCard.getProductData();
 
         // open product details page
-        ProductDetailsPage productDetailsPage = selectedProductCard.goToProductDetailsPage();
+        ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
         assertTrue(productDetailsPage.isForElement(selectedProduct));
 
         // add product to cart
@@ -247,7 +249,7 @@ public class WebTest extends AbstractTest {
                         .formatted(selectedProduct.getName()));
 
         // go to checkout
-        CheckoutPageStepOne checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
+        CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
 
         // complete first step of checkout
         int productsInShoppingCart = checkoutPageStepOne.getProductsCount();
@@ -259,26 +261,27 @@ public class WebTest extends AbstractTest {
                         .formatted(selectedProduct.getName()));
 
         // TODO read this data from some config
-        CheckoutPageStepTwo checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
 
-        CheckoutPageStepThree checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
-        HomePage homePage = checkoutPageStepThree.returnToHomePage();
+        CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
+        HomePageBase homePage = checkoutPageStepThree.returnToHomePage();
+        homePage.assertPageOpened();
     }
 
 
     @Test
     public void verifyAddingItemReviewTest() {
-        ProductsPage productsPage = new ProductsPage(getDriver(), ProductCategory.GEAR_FITNESS_EQUIPMENT);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_FITNESS_EQUIPMENT);
         productsPage.open();
         productsPage.assertPageOpened();
 
         // select random product
-        ProductCard selectedProductCard = RandomPicker.getRandomElement(
+        ProductCardBase selectedProductCard = RandomPicker.getRandomElement(
                 productsPage.getProductCards());
         Product selectedProduct = selectedProductCard.getProductData();
 
         // open product details page
-        ProductDetailsPage productDetailsPage = selectedProductCard.goToProductDetailsPage();
+        ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
         assertTrue(productDetailsPage.isForElement(selectedProduct));
 
         Review review = Review.builder()

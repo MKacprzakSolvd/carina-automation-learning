@@ -1,6 +1,6 @@
-package com.solvd.pages;
+package com.solvd.gui.pages.common;
 
-import com.solvd.components.ShoppingCart;
+import com.solvd.gui.components.ShoppingCartBase;
 import com.solvd.model.Product;
 import com.solvd.model.Review;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
@@ -11,9 +11,9 @@ import org.openqa.selenium.support.FindBy;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductDetailsPage extends AbstractPage {
+public abstract class ProductDetailsPageBase extends AbstractPage {
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
-    private ShoppingCart shoppingCart;
+    private ShoppingCartBase shoppingCart;
 
     @FindBy(xpath = "//*[@role='alert']/*/*")
     private List<ExtendedWebElement> alerts;
@@ -50,12 +50,12 @@ public class ProductDetailsPage extends AbstractPage {
     private ExtendedWebElement reviewSubmitButton;
 
 
-    public ProductDetailsPage(WebDriver driver) {
+    public ProductDetailsPageBase(WebDriver driver) {
         super(driver);
     }
 
 
-    public ShoppingCart getShoppingCart() {
+    public ShoppingCartBase getShoppingCart() {
         return this.shoppingCart;
     }
 
@@ -84,7 +84,7 @@ public class ProductDetailsPage extends AbstractPage {
         this.addToCartButton.click();
     }
 
-    public ProductDetailsPage addReview(Review review) {
+    public ProductDetailsPageBase addReview(Review review) {
         // open ratings tab
         this.reviewsTabTitle.click();
 
@@ -99,7 +99,7 @@ public class ProductDetailsPage extends AbstractPage {
         this.reviewReviewText.type(review.getReviewContent());
         this.reviewSubmitButton.click();
 
-        return new ProductDetailsPage(getDriver());
+        return initPage(getDriver(), ProductDetailsPageBase.class);
     }
 
     /**

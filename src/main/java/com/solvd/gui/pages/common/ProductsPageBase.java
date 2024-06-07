@@ -1,11 +1,11 @@
-package com.solvd.pages;
+package com.solvd.gui.pages.common;
 
-import com.solvd.components.ProductCard;
-import com.solvd.components.ProductFilter;
-import com.solvd.components.ShoppingCart;
 import com.solvd.enums.ProductCategory;
 import com.solvd.enums.ProductsFilter;
 import com.solvd.enums.SortOrder;
+import com.solvd.gui.components.ProductCardBase;
+import com.solvd.gui.components.ProductFilterBase;
+import com.solvd.gui.components.ShoppingCartBase;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
@@ -14,30 +14,30 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.*;
 
-public class ProductsPage extends AbstractPage {
+public abstract class ProductsPageBase extends AbstractPage {
     ProductCategory productCategory;
 
     @FindBy(css = ".products .product-items .product-item")
-    private List<ProductCard> productCards;
+    private List<ProductCardBase> productCards;
 
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
-    private ShoppingCart shoppingCart;
+    private ShoppingCartBase shoppingCart;
 
     // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
     // select filter block that have 'Size' in title
     @FindBy(xpath = "//*[@id='layered-filter-block']" +
             "//*[contains(@class,'filter-options-item')]" +
             "[.//*[contains(@class,'filter-options-title')][text()='Size']]")
-    private ProductFilter sizeFilter;
+    private ProductFilterBase sizeFilter;
 
     // select filter block that have 'Color' in title
     @FindBy(xpath = "//*[@id='layered-filter-block']" +
             "//*[contains(@class,'filter-options-item')]" +
             "[.//*[contains(@class,'filter-options-title')][text()='Color']]")
-    private ProductFilter colorFilter;
+    private ProductFilterBase colorFilter;
 
     // maps from filters enum to filter object
-    private Map<ProductsFilter, ProductFilter> filtersMap = new EnumMap<>(ProductsFilter.class);
+    private Map<ProductsFilter, ProductFilterBase> filtersMap = new EnumMap<>(ProductsFilter.class);
 
     // there are two elements with id 'sorter', so this locator is required
     @FindBy(css = "#authenticationPopup + .toolbar-products #sorter")
@@ -46,7 +46,7 @@ public class ProductsPage extends AbstractPage {
     private ExtendedWebElement sortDirectionSelector;
 
 
-    public ProductsPage(WebDriver driver, ProductCategory productCategory) {
+    public ProductsPageBase(WebDriver driver, ProductCategory productCategory) {
         super(driver);
         this.productCategory = productCategory;
         setPageURL(productCategory.getRelativeUrl());
@@ -62,15 +62,15 @@ public class ProductsPage extends AbstractPage {
         return productCategory;
     }
 
-    public List<ProductCard> getProductCards() {
+    public List<ProductCardBase> getProductCards() {
         return Collections.unmodifiableList(this.productCards);
     }
 
     /**
      * finds product card corresponding to passed product
      */
-    public Optional<ProductCard> findProductCard(Product product) {
-        for (ProductCard productCard : this.productCards) {
+    public Optional<ProductCardBase> findProductCard(Product product) {
+        for (ProductCardBase productCard : this.productCards) {
             // TODO: create method representsProduct(Product) in ProductCard and use it here
             if (productCard.getProductName().equals(product.getName())) {
                 return Optional.of(productCard);
@@ -85,7 +85,7 @@ public class ProductsPage extends AbstractPage {
                 .toList();
     }
 
-    public ShoppingCart getShoppingCart() {
+    public ShoppingCartBase getShoppingCart() {
         return this.shoppingCart;
     }
 
@@ -95,7 +95,7 @@ public class ProductsPage extends AbstractPage {
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public ProductsPage filterBy(ProductsFilter productsFilter, String option) {
+    public ProductsPageBase filterBy(ProductsFilter productsFilter, String option) {
         return this.filtersMap.get(productsFilter).filterBy(option, getProductCategory());
     }
 
@@ -108,23 +108,23 @@ public class ProductsPage extends AbstractPage {
         );
     }
 
-    public ProductsPage setSortOrder(SortOrder sortOrder) {
+    public ProductsPageBase setSortOrder(SortOrder sortOrder) {
         // TODO: figure out how to select sort order by value instead of by selected text
         //       (to get value use getAttribute("value"), but I don't know how to select
         //       from selection by value with Carina
-        ProductsPage productsPage = this;
+        ProductsPageBase productsPage = this;
         SortOrder currentSortOrder = getSortOrder();
 
         // select correct sort type
         if (!currentSortOrder.getValue().equals(sortOrder.getValue())) {
             this.sortTypeSelector.select(sortOrder.getValue());
-            productsPage = new ProductsPage(getDriver(), getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
         }
 
         // select correct sort direction
         if (currentSortOrder.isAscending() != sortOrder.isAscending()) {
             this.sortDirectionSelector.click();
-            productsPage = new ProductsPage(getDriver(), getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
         }
 
         return productsPage;

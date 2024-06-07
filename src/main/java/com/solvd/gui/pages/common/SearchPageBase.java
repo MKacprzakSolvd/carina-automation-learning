@@ -1,6 +1,6 @@
-package com.solvd.pages;
+package com.solvd.gui.pages.common;
 
-import com.solvd.components.ProductCard;
+import com.solvd.gui.components.ProductCardBase;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
@@ -8,17 +8,17 @@ import org.openqa.selenium.support.FindBy;
 import java.util.Collections;
 import java.util.List;
 
-public class SearchPage extends AbstractPage {
+public abstract class SearchPageBase extends AbstractPage {
     // TODO make ProductCard implement ExtendedWebElement
     @FindBy(css = ".product-items .product-item")
-    private List<ProductCard> productCards;
+    private List<ProductCardBase> productCards;
 
-    public SearchPage(WebDriver driver) {
+    public SearchPageBase(WebDriver driver) {
         super(driver);
         setPageURL("catalogsearch/result/");
     }
 
-    public List<ProductCard> getProductCards() {
+    public List<ProductCardBase> getProductCards() {
         return Collections.unmodifiableList(this.productCards);
     }
 }

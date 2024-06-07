@@ -1,4 +1,4 @@
-package com.solvd.pages;
+package com.solvd.gui.pages.common;
 
 import com.solvd.model.Product;
 import com.solvd.model.ShippingInfo;
@@ -9,7 +9,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-public class CheckoutPageStepOne extends AbstractPage {
+public abstract class CheckoutPageStepOneBase extends AbstractPage {
     @FindBy(id = "customer-email")
     private ExtendedWebElement emailField;
     @FindBy(xpath = "//*[@name='shippingAddress.firstname']//*[@name='firstname']")
@@ -59,12 +59,13 @@ public class CheckoutPageStepOne extends AbstractPage {
     @FindBy(css = "#opc-sidebar .product-item-name")
     private List<ExtendedWebElement> productNames;
 
-    public CheckoutPageStepOne(WebDriver driver) {
+    public CheckoutPageStepOneBase(WebDriver driver) {
         super(driver);
+        waitForJSToLoad(30);
     }
 
     // TODO create class for address with builder and just pass it in
-    public CheckoutPageStepTwo goToNextStep(
+    public CheckoutPageStepTwoBase goToNextStep(
             ShippingInfo shippingInfo
     ) {
         this.emailField.type(shippingInfo.getEmail());
@@ -98,7 +99,7 @@ public class CheckoutPageStepOne extends AbstractPage {
         // go to next step
         this.goToNextStepButton.click();
 
-        return new CheckoutPageStepTwo(getDriver());
+        return initPage(getDriver(), CheckoutPageStepTwoBase.class);
     }
 
     public int getProductsCount() {
@@ -108,6 +109,7 @@ public class CheckoutPageStepOne extends AbstractPage {
     public boolean isProductInCart(Product product) {
         // TODO implement comparison based on all avaliable data (price, color, etc)
         openProductsList();
+        waitForJSToLoad(30);
         return productNames.stream()
                 .map(webElement -> webElement.getText())
                 .anyMatch(title -> title.equals(product.getName()));
@@ -118,6 +120,7 @@ public class CheckoutPageStepOne extends AbstractPage {
     }
 
     private void openProductsList() {
+        waitForJSToLoad(30);
         if (!isProductsListOpened()) {
             this.toggleProductListButton.click();
         }

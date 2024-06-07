@@ -1,7 +1,7 @@
-package com.solvd.components;
+package com.solvd.gui.components;
 
+import com.solvd.gui.pages.common.ProductDetailsPageBase;
 import com.solvd.model.Product;
-import com.solvd.pages.ProductDetailsPage;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
 import org.openqa.selenium.SearchContext;
@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductCard extends AbstractUIObject {
+public class ProductCardBase extends AbstractUIObject {
     @FindBy(xpath = ".//*[contains(@class,'product-item-name')]//a[contains(@class,'product-item-link')]")
     private ExtendedWebElement productName;
     @FindBy(className = "price")
@@ -27,7 +27,7 @@ public class ProductCard extends AbstractUIObject {
     @FindBy(css = ".product-item-details .tocart")
     private ExtendedWebElement addToCartButton;
 
-    public ProductCard(WebDriver driver, SearchContext searchContext) {
+    public ProductCardBase(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
     }
 
@@ -82,9 +82,12 @@ public class ProductCard extends AbstractUIObject {
         this.addToCartButton.click();
     }
 
-    public ProductDetailsPage goToProductDetailsPage() {
+    public ProductDetailsPageBase goToProductDetailsPage() {
+        // center on the image before clicking to avoid image being covered
+        // by the ad banner in the lower right part of the screen
+        this.image.scrollTo();
         this.image.click();
-        return new ProductDetailsPage(this.driver);
+        return initPage(getDriver(), ProductDetailsPageBase.class);
     }
 
     /**

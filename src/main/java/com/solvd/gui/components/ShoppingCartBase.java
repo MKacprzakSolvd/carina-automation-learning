@@ -1,7 +1,8 @@
-package com.solvd.components;
+package com.solvd.gui.components;
 
+import com.solvd.gui.pages.common.CheckoutPageStepOneBase;
+import com.solvd.gui.pages.desktop.CheckoutPageStepOne;
 import com.solvd.model.Product;
-import com.solvd.pages.CheckoutPageStepOne;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
 import org.openqa.selenium.By;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
-public class ShoppingCart extends AbstractUIObject {
+public class ShoppingCartBase extends AbstractUIObject {
     // class (added to cartCounterWrapper)  indicating that cart content is updating
     private static final String CART_UPDATE_INDICATING_CLASS = "_block-content-loading";
 
@@ -48,7 +49,7 @@ public class ShoppingCart extends AbstractUIObject {
     // confirmation button from modal. It it outside of shopping cart root element
     private By removeProductConfirmationButton = By.cssSelector(".modals-wrapper .action-accept");
 
-    public ShoppingCart(WebDriver driver, SearchContext searchContext) {
+    public ShoppingCartBase(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
     }
 
@@ -110,8 +111,8 @@ public class ShoppingCart extends AbstractUIObject {
         }
 
         // Confirm removal in modal
-        WebElement removalConfirmationButton = this.driver.findElement(removeProductConfirmationButton);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement removalConfirmationButton = getDriver().findElement(this.removeProductConfirmationButton);
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         wait.until(visibilityOf(removalConfirmationButton));
         removalConfirmationButton.click();
         waitTillProductRemovedFromCart(product);
@@ -124,24 +125,24 @@ public class ShoppingCart extends AbstractUIObject {
      * Proceeds to checkout page. Cart must have some items, otherwise
      * illegal state exception will be thrown
      */
-    public CheckoutPageStepOne goToCheckout() {
+    public CheckoutPageStepOneBase goToCheckout() {
         if (isEmpty()) {
             throw new IllegalStateException("Shopping cart must have at least one product to go to checkout.");
         }
 
         open();
         this.toCheckoutButton.click();
-        return new CheckoutPageStepOne(this.driver);
+        return initPage(getDriver(), CheckoutPageStepOne.class);
     }
 
     protected void waitTillCartUpdates() {
-        WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         wait.until(not(attributeContains(this.cartCounterWrapper, "class", CART_UPDATE_INDICATING_CLASS)));
     }
 
     protected void waitTillProductRemovedFromCart(Product product) {
         // TODO: check whether nested waits are a problem
-        WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         wait.until((driver) -> !isProductInCart(product));
     }
 }
