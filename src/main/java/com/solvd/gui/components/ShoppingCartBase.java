@@ -1,7 +1,6 @@
 package com.solvd.gui.components;
 
 import com.solvd.gui.pages.common.CheckoutPageStepOneBase;
-import com.solvd.gui.pages.desktop.CheckoutPageStepOne;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
@@ -132,7 +131,7 @@ public class ShoppingCartBase extends AbstractUIObject {
 
         open();
         this.toCheckoutButton.click();
-        return initPage(getDriver(), CheckoutPageStepOne.class);
+        return initPage(getDriver(), CheckoutPageStepOneBase.class);
     }
 
     protected void waitTillCartUpdates() {

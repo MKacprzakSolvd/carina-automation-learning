@@ -4,7 +4,7 @@ import com.solvd.gui.pages.common.CheckoutPageStepOneBase;
 import com.zebrunner.carina.utils.factory.DeviceType;
 import org.openqa.selenium.WebDriver;
 
-@DeviceType(pageType = DeviceType.Type.DESKTOP, parentClass = CheckoutPageStepOne.class)
+@DeviceType(pageType = DeviceType.Type.DESKTOP, parentClass = CheckoutPageStepOneBase.class)
 public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
     public CheckoutPageStepOne(WebDriver driver) {
         super(driver);
