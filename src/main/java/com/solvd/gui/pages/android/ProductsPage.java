@@ -1,18 +1,19 @@
-package com.solvd.gui.pages.desktop;
+package com.solvd.gui.pages.android;
 
 import com.solvd.enums.ProductCategory;
 import com.solvd.gui.components.ProductFilterBase;
+import com.solvd.gui.pages.android.components.ProductFilter;
 import com.solvd.gui.pages.common.ProductsPageBase;
 import com.zebrunner.carina.utils.factory.DeviceType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
-@DeviceType(pageType = DeviceType.Type.DESKTOP, parentClass = ProductsPageBase.class)
+@DeviceType(pageType = DeviceType.Type.ANDROID_PHONE, parentClass = ProductsPageBase.class)
 public class ProductsPage extends ProductsPageBase {
     @FindBy(xpath = SIZE_FILTER_XPATH)
-    private ProductFilterBase sizeFilter;
+    private ProductFilter sizeFilter;
     @FindBy(xpath = COLOR_FILTER_XPATH)
-    private ProductFilterBase colorFilter;
+    private ProductFilter colorFilter;
 
     public ProductsPage(WebDriver driver, ProductCategory productCategory) {
         super(driver, productCategory);

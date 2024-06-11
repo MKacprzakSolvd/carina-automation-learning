@@ -68,6 +68,7 @@ public class WebTest extends AbstractTest {
         homePage.open();
         homePage.assertPageOpened();
         SearchPageBase searchPage = homePage.searchForProduct("bag");
+        //searchPage.assertPageOpened();
         for (var productCard : searchPage.getProductCards()) {
             LOGGER.info("Product name: " + productCard.getProductData().getName());
         }

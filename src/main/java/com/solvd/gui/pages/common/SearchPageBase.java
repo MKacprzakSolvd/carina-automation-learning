@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class SearchPageBase extends AbstractPage {
     // TODO make ProductCard implement ExtendedWebElement
-    @FindBy(css = ".product-items .product-item")
+    @FindBy(css = ".products .product-items .product-item")
     private List<ProductCardBase> productCards;
 
     public SearchPageBase(WebDriver driver) {
@@ -19,6 +19,7 @@ public abstract class SearchPageBase extends AbstractPage {
     }
 
     public List<ProductCardBase> getProductCards() {
+        System.out.println(this.productCards.size());
         return Collections.unmodifiableList(this.productCards);
     }
 }

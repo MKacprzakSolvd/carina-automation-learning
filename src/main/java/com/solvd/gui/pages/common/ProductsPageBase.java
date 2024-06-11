@@ -12,9 +12,21 @@ import com.zebrunner.carina.webdriver.gui.AbstractPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class ProductsPageBase extends AbstractPage {
+    // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
+    // select filter block that have 'Size' in title
+    protected final String SIZE_FILTER_XPATH = "//*[@id='layered-filter-block']"
+            + "//*[contains(@class,'filter-options-item')]"
+            + "[.//*[contains(@class,'filter-options-title')][text()='Size']]";
+    // select filter block that have 'Color' in title
+    protected final String COLOR_FILTER_XPATH = "//*[@id='layered-filter-block']"
+            + "//*[contains(@class,'filter-options-item')]"
+            + "[.//*[contains(@class,'filter-options-title')][text()='Color']]";
+
     ProductCategory productCategory;
 
     @FindBy(css = ".products .product-items .product-item")
@@ -22,22 +34,6 @@ public abstract class ProductsPageBase extends AbstractPage {
 
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
     private ShoppingCartBase shoppingCart;
-
-    // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
-    // select filter block that have 'Size' in title
-    @FindBy(xpath = "//*[@id='layered-filter-block']" +
-            "//*[contains(@class,'filter-options-item')]" +
-            "[.//*[contains(@class,'filter-options-title')][text()='Size']]")
-    private ProductFilterBase sizeFilter;
-
-    // select filter block that have 'Color' in title
-    @FindBy(xpath = "//*[@id='layered-filter-block']" +
-            "//*[contains(@class,'filter-options-item')]" +
-            "[.//*[contains(@class,'filter-options-title')][text()='Color']]")
-    private ProductFilterBase colorFilter;
-
-    // maps from filters enum to filter object
-    private Map<ProductsFilter, ProductFilterBase> filtersMap = new EnumMap<>(ProductsFilter.class);
 
     // there are two elements with id 'sorter', so this locator is required
     @FindBy(css = "#authenticationPopup + .toolbar-products #sorter")
@@ -50,13 +46,20 @@ public abstract class ProductsPageBase extends AbstractPage {
         super(driver);
         this.productCategory = productCategory;
         setPageURL(productCategory.getRelativeUrl());
-
-        // TODO: find a better solution for this mapping, currently it's easy
-        //       to forget about adding a new mapping when adding filter
-        this.filtersMap.put(ProductsFilter.SIZE, this.sizeFilter);
-        this.filtersMap.put(ProductsFilter.COLOR, this.colorFilter);
     }
 
+
+    protected abstract ProductFilterBase getSizeFilter();
+
+    protected abstract ProductFilterBase getColorFilter();
+
+    protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
+        return switch (productsFilter) {
+            case COLOR -> getColorFilter();
+            case SIZE -> getSizeFilter();
+            default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilter.name());
+        };
+    }
 
     private ProductCategory getProductCategory() {
         return productCategory;
@@ -91,12 +94,12 @@ public abstract class ProductsPageBase extends AbstractPage {
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
     public List<String> getFilterOptions(ProductsFilter productsFilter) {
-        return this.filtersMap.get(productsFilter).getOptions();
+        return getFilter(productsFilter).getOptions();
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
     public ProductsPageBase filterBy(ProductsFilter productsFilter, String option) {
-        return this.filtersMap.get(productsFilter).filterBy(option, getProductCategory());
+        return getFilter(productsFilter).filterBy(option, getProductCategory());
     }
 
     public SortOrder getSortOrder() {

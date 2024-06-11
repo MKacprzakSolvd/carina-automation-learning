@@ -26,17 +26,25 @@ public class ProductFilterBase extends AbstractUIObject {
     public List<String> getOptions() {
         // expand options to avoid waiting for visibility added by Carina
         expand();
-        return this.options.stream()
-                .map(webElement -> webElement.getAttribute("option-label"))
+        List<String> options = this.options.stream()
+                .map(extendedWebElement -> extendedWebElement.getAttribute("option-label"))
                 .toList();
+        collapse();
+        return options;
     }
 
     /**
      * expand filter section, allowing to select option
      * does anything only if filter is not expanded
      */
-    private void expand() {
+    protected void expand() {
         if (!isExpanded()) {
+            this.title.click();
+        }
+    }
+
+    protected void collapse() {
+        if (isExpanded()) {
             this.title.click();
         }
     }
@@ -46,7 +54,8 @@ public class ProductFilterBase extends AbstractUIObject {
     }
 
     public ProductsPageBase filterBy(String option, ProductCategory productCategory) {
-        for (ExtendedWebElement optionElement : options) {
+        expand();
+        for (ExtendedWebElement optionElement : this.options) {
             if (optionElement.getAttribute("option-label").equals(option)) {
                 expand();
                 optionElement.click();
