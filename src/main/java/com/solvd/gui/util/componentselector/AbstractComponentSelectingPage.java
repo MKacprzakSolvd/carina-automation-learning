@@ -48,9 +48,12 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
                     // overwrite field only if matching class differs from its current class
                     if (matchingComponentClass != null && !field.getType().equals(matchingComponentClass)) {
                         // get constructor
+                        // TODO: use constructorUtils from Apache Commons
+                        //       like here: com/zebrunner/carina/webdriver/decorator/ExtendedWebElement.java::clone
                         Constructor<?> constructor = matchingComponentClass.getDeclaredConstructor(WebDriver.class, SearchContext.class);
                         ExtendedWebElement oldValue = (ExtendedWebElement) field.get(this);
-                        Object newValue = constructor.newInstance(oldValue.getDriver(), oldValue.getSearchContext());
+                        ExtendedWebElement newValue = (ExtendedWebElement) constructor.newInstance(oldValue.getDriver(), oldValue.getSearchContext());
+                        initNewExtendedWebElement(newValue, oldValue);
                         // assign new value
                         field.set(this, newValue);
                     }
@@ -80,5 +83,10 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
                     && componentDeviceType != null;
         }
         return false;
+    }
+
+    protected void initNewExtendedWebElement(ExtendedWebElement elementToInit, ExtendedWebElement oldElement) {
+        elementToInit.setBy(oldElement.getBy());
+        elementToInit.setName(oldElement.getName());
     }
 }
