@@ -16,7 +16,6 @@ public class ProductFilter extends ProductFilterBase {
 
     public ProductFilter(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
-        System.out.println("ANDROIDIDIDIDIDIDIDIIDIDIDIIDIDIDID");
     }
 
     @Override
