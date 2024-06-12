@@ -7,6 +7,7 @@ import com.solvd.gui.pages.common.components.ProductCardBase;
 import com.solvd.gui.pages.common.components.ProductFilterBase;
 import com.solvd.gui.pages.common.components.ShoppingCartBase;
 import com.solvd.gui.util.componentselector.AbstractComponentSelectingPage;
+import com.solvd.gui.util.componentselector.AutoSelectComponent;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import org.openqa.selenium.WebDriver;
@@ -17,20 +18,25 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
-    // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
-    // select filter block that have 'Size' in title
-    protected final String SIZE_FILTER_XPATH = "//*[@id='layered-filter-block']"
-            + "//*[contains(@class,'filter-options-item')]"
-            + "[.//*[contains(@class,'filter-options-title')][text()='Size']]";
-    // select filter block that have 'Color' in title
-    protected final String COLOR_FILTER_XPATH = "//*[@id='layered-filter-block']"
-            + "//*[contains(@class,'filter-options-item')]"
-            + "[.//*[contains(@class,'filter-options-title')][text()='Color']]";
-
     ProductCategory productCategory;
 
     @FindBy(css = ".products .product-items .product-item")
     private List<ProductCardBase> productCards;
+
+    // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
+    // select filter block that have 'Size' in title
+    @FindBy(xpath = "//*[@id='layered-filter-block']"
+            + "//*[contains(@class,'filter-options-item')]"
+            + "[.//*[contains(@class,'filter-options-title')][text()='Size']]")
+    @AutoSelectComponent
+    private ProductFilterBase sizeFilter;
+
+    // select filter block that have 'Color' in title
+    @FindBy(xpath = "//*[@id='layered-filter-block']"
+            + "//*[contains(@class,'filter-options-item')]"
+            + "[.//*[contains(@class,'filter-options-title')][text()='Color']]")
+    @AutoSelectComponent
+    private ProductFilterBase colorFilter;
 
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
     private ShoppingCartBase shoppingCart;
@@ -46,17 +52,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         super(driver);
         this.productCategory = productCategory;
         setPageURL(productCategory.getRelativeUrl());
+        getPageOpeningStrategy();
     }
-
-
-    protected abstract ProductFilterBase getSizeFilter();
-
-    protected abstract ProductFilterBase getColorFilter();
 
     protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
         return switch (productsFilter) {
-            case COLOR -> getColorFilter();
-            case SIZE -> getSizeFilter();
+            case COLOR -> this.colorFilter;
+            case SIZE -> this.sizeFilter;
             default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilter.name());
         };
     }

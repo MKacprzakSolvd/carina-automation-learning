@@ -17,12 +17,9 @@ import java.lang.reflect.InvocationTargetException;
 //       then it overrides it with appropriate children class) (maybe create @SelectingFindBy annotation)
 public abstract class AbstractComponentSelectingPage extends AbstractPage {
     private static final Logger LOGGER = LogManager.getLogger(AbstractComponentSelectingPage.class.getName());
-    private static int aaaRandomField = 1;
 
     public AbstractComponentSelectingPage(WebDriver driver) {
         super(driver);
-        System.out.println("COMPONEN SELECT CTOR");
-        System.out.println(aaaRandomField);
         updateComponents();
     }
 
@@ -30,7 +27,19 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
      * updates components to appropriate children class
      */
     private void updateComponents() {
-        for (var field : this.getClass().getDeclaredFields()) {
+        Class<?> classInHierarchy = this.getClass();
+        while (classInHierarchy != null) {
+            updateComponentsForClass(classInHierarchy);
+            classInHierarchy = classInHierarchy.getSuperclass();
+        }
+    }
+
+    /**
+     * update objects components that reside in specified class
+     */
+    private void updateComponentsForClass(Class<?> clazz) {
+        // TODO: add logging
+        for (var field : clazz.getDeclaredFields()) {
             // TODO: go over each class in hierarchy
             if (field.isAnnotationPresent(AutoSelectComponent.class)) {
                 try {
