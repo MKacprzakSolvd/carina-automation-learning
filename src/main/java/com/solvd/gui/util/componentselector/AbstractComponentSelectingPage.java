@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 
-// TODO: figure out how to avoid double initialization of components (first it creates base class,
+// FIXME: figure out how to avoid double initialization of components (first it creates base class,
 //       then it overrides it with appropriate children class) (maybe create @SelectingFindBy annotation)
 public abstract class AbstractComponentSelectingPage extends AbstractPage {
     private static final Logger LOGGER = LogManager.getLogger(AbstractComponentSelectingPage.class.getName());
