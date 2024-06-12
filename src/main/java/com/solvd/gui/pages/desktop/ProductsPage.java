@@ -1,8 +1,9 @@
 package com.solvd.gui.pages.desktop;
 
 import com.solvd.enums.ProductCategory;
-import com.solvd.gui.components.ProductFilterBase;
 import com.solvd.gui.pages.common.ProductsPageBase;
+import com.solvd.gui.pages.common.components.ProductFilterBase;
+import com.solvd.gui.util.componentselector.AutoSelectComponent;
 import com.zebrunner.carina.utils.factory.DeviceType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
@@ -13,6 +14,9 @@ public class ProductsPage extends ProductsPageBase {
     private ProductFilterBase sizeFilter;
     @FindBy(xpath = COLOR_FILTER_XPATH)
     private ProductFilterBase colorFilter;
+    @FindBy(xpath = COLOR_FILTER_XPATH)
+    @AutoSelectComponent
+    private ProductFilterBase androidColorFilter;
 
     public ProductsPage(WebDriver driver, ProductCategory productCategory) {
         super(driver, productCategory);

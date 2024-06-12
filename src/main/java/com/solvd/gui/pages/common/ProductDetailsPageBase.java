@@ -1,6 +1,6 @@
 package com.solvd.gui.pages.common;
 
-import com.solvd.gui.components.ShoppingCartBase;
+import com.solvd.gui.pages.common.components.ShoppingCartBase;
 import com.solvd.model.Product;
 import com.solvd.model.Review;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;

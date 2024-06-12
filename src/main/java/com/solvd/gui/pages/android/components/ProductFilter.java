@@ -1,11 +1,14 @@
 package com.solvd.gui.pages.android.components;
 
-import com.solvd.gui.components.ProductFilterBase;
+import com.solvd.gui.pages.common.components.ProductFilterBase;
+import com.solvd.gui.util.componentselector.ComponentFor;
+import com.zebrunner.carina.utils.factory.DeviceType;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
+@ComponentFor(type = DeviceType.Type.ANDROID_PHONE)
 public class ProductFilter extends ProductFilterBase {
     // this element is outside ProductFilter element, so xpath starts with //
     @FindBy(xpath = "//*[contains(@class, 'filter-title')]//*[@data-role='title']")
@@ -13,6 +16,7 @@ public class ProductFilter extends ProductFilterBase {
 
     public ProductFilter(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
+        System.out.println("ANDROID CREATED");
     }
 
     @Override

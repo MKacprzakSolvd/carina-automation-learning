@@ -3,12 +3,12 @@ package com.solvd.gui.pages.common;
 import com.solvd.enums.ProductCategory;
 import com.solvd.enums.ProductsFilter;
 import com.solvd.enums.SortOrder;
-import com.solvd.gui.components.ProductCardBase;
-import com.solvd.gui.components.ProductFilterBase;
-import com.solvd.gui.components.ShoppingCartBase;
+import com.solvd.gui.pages.common.components.ProductCardBase;
+import com.solvd.gui.pages.common.components.ProductFilterBase;
+import com.solvd.gui.pages.common.components.ShoppingCartBase;
+import com.solvd.gui.util.componentselector.AbstractComponentSelectingPage;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
-import com.zebrunner.carina.webdriver.gui.AbstractPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ProductsPageBase extends AbstractPage {
+public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
     // select filter block that have 'Size' in title
     protected final String SIZE_FILTER_XPATH = "//*[@id='layered-filter-block']"

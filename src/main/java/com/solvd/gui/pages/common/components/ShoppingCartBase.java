@@ -1,4 +1,4 @@
-package com.solvd.gui.components;
+package com.solvd.gui.pages.common.components;
 
 import com.solvd.gui.pages.common.CheckoutPageStepOneBase;
 import com.solvd.model.Product;
