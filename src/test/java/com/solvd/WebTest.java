@@ -178,6 +178,7 @@ public class WebTest extends AbstractTest {
                 "Selected product (%s) was not in the cart (on products page)."
                         .formatted(selectedProduct.getName()));
         CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
+        checkoutPageStepOne.assertPageOpened();
 
         // complete first step of checkout
         int productsInShoppingCart = checkoutPageStepOne.getProductsCount();
@@ -294,6 +295,7 @@ public class WebTest extends AbstractTest {
 
         // add review
         productDetailsPage = productDetailsPage.addReview(review);
+        //productDetailsPage.assertPageOpened();
 
         // check if review was added
         assertTrue(productDetailsPage.isReviewAddedSuccessfullyAlertShown(),

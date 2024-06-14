@@ -97,6 +97,18 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
         this.reviewNickname.type(review.getUserNickname());
         this.reviewSummary.type(review.getSummary());
         this.reviewReviewText.type(review.getReviewContent());
+
+        return submitReview();
+    }
+
+    /**
+     * submits review
+     * this process differs on desktop and mobile,
+     * so this method is overridden for mobile page
+     *
+     * @return new details page (submitting refreshes page)
+     */
+    protected ProductDetailsPageBase submitReview() {
         this.reviewSubmitButton.click();
 
         return initPage(getDriver(), ProductDetailsPageBase.class);
@@ -106,6 +118,7 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
      * informs whether alert that review was added successfully is shown
      */
     public boolean isReviewAddedSuccessfullyAlertShown() {
+        waitForJSToLoad();
         for (ExtendedWebElement message : this.alerts) {
             if (message.getText().equals("You submitted your review for moderation.")) {
                 return true;

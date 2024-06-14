@@ -61,13 +61,12 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
 
     public CheckoutPageStepOneBase(WebDriver driver) {
         super(driver);
+        setPageURL("checkout/#shipping");
         waitForJSToLoad(30);
     }
 
     // TODO create class for address with builder and just pass it in
-    public CheckoutPageStepTwoBase goToNextStep(
-            ShippingInfo shippingInfo
-    ) {
+    public CheckoutPageStepTwoBase goToNextStep(ShippingInfo shippingInfo) {
         this.emailField.type(shippingInfo.getEmail());
         this.firstNameField.type(shippingInfo.getFirstName());
         this.lastNameField.type(shippingInfo.getLastName());

@@ -21,10 +21,12 @@ public abstract class CheckoutPageStepTwoBase extends AbstractPage {
     public CheckoutPageStepTwoBase(WebDriver driver) {
         super(driver);
         //waitForJSToLoad();
+        setPageURL("checkout/#payment");
         waitTillPageLoads();
     }
 
     public CheckoutPageStepThreeBase placeOrder() {
+        waitForJSToLoad();
         this.placeOrderButton.click();
         return initPage(getDriver(), CheckoutPageStepThreeBase.class);
     }
