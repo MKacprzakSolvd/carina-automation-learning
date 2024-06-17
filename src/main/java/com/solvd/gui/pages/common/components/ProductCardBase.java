@@ -18,6 +18,8 @@ public class ProductCardBase extends AbstractUIObject {
     private ExtendedWebElement price;
     @FindBy(className = "product-image-photo")
     private ExtendedWebElement image;
+    @FindBy(xpath = ".//a[contains(@class,'product-item-photo')]")
+    private ExtendedWebElement link;
 
     @FindBy(xpath = ".//*[@attribute-code='size']//*[@option-label]")
     private List<ExtendedWebElement> avaliableSizes;
@@ -45,6 +47,10 @@ public class ProductCardBase extends AbstractUIObject {
 
     public BigDecimal getPrice() {
         return new BigDecimal(extractPrice(this.price.getText()));
+    }
+
+    public String getLink() {
+        return this.link.getAttribute("href");
     }
 
     public List<String> getAvaliableSizes() {
