@@ -10,6 +10,7 @@ import com.solvd.gui.util.componentselector.AbstractComponentSelectingPage;
 import com.solvd.gui.util.componentselector.AutoSelectComponent;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
+import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
@@ -38,6 +39,7 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     @AutoSelectComponent
     private ProductFilterBase colorFilter;
 
+    @Getter
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
     private ShoppingCartBase shoppingCart;
 
@@ -52,7 +54,7 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         super(driver);
         this.productCategory = productCategory;
         setPageURL(productCategory.getRelativeUrl());
-        getPageOpeningStrategy();
+        setUiLoadedMarker(this.sortDirectionSelector);
     }
 
     protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
@@ -88,10 +90,6 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         return this.productCards.stream()
                 .map(productCard -> productCard.getProductData())
                 .toList();
-    }
-
-    public ShoppingCartBase getShoppingCart() {
-        return this.shoppingCart;
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)

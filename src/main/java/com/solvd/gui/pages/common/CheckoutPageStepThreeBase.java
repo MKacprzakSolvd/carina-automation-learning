@@ -15,10 +15,11 @@ public abstract class CheckoutPageStepThreeBase extends AbstractPage {
 
     public CheckoutPageStepThreeBase(WebDriver driver) {
         super(driver);
-        waitTillPageLoads();
+//        waitTillPageLoads();
     }
 
     public HomePageBase returnToHomePage() {
+        waitTillPageLoads();
         this.continueShoppingButton.click();
         return initPage(getDriver(), HomePageBase.class);
     }

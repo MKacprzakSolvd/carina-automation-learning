@@ -9,6 +9,8 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+
 public abstract class CheckoutPageStepOneBase extends AbstractPage {
     @FindBy(id = "customer-email")
     private ExtendedWebElement emailField;
@@ -102,6 +104,9 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     }
 
     public int getProductsCount() {
+        // TODO fix other wait unitls from element.wait.. to wait..
+        // TODO add stataic imports for other wait conditions
+        waitUntil(visibilityOf(this.productsInCartCount), 10);
         return Integer.parseInt(this.productsInCartCount.getText());
     }
 

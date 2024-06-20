@@ -14,6 +14,7 @@ import com.solvd.model.ShippingInfo;
 import com.zebrunner.carina.core.AbstractTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -67,8 +68,11 @@ public class WebTest extends AbstractTest {
         HomePageBase homePage = initPage(getDriver(), HomePageBase.class);
         homePage.open();
         homePage.assertPageOpened();
+
         SearchPageBase searchPage = homePage.searchForProduct("bag");
-        //searchPage.assertPageOpened();
+        searchPage.assertPageOpened();
+        Assert.assertFalse(searchPage.getProductCards().isEmpty(), "Search for product returned no results.");
+
         for (var productCard : searchPage.getProductCards()) {
             LOGGER.info("Product name: " + productCard.getProductData().getName());
         }
@@ -89,6 +93,7 @@ public class WebTest extends AbstractTest {
                 productsPage.getFilterOptions(ProductsFilter.SIZE)
         );
         productsPage = productsPage.filterBy(ProductsFilter.SIZE, randomSizeOption);
+        productsPage.assertPageOpened();
 
         // make sure every element is available in given size
         // FIXME: check it on all pages
@@ -103,6 +108,7 @@ public class WebTest extends AbstractTest {
                 productsPage.getFilterOptions(ProductsFilter.COLOR)
         );
         productsPage = productsPage.filterBy(ProductsFilter.COLOR, randomColorOption);
+        productsPage.assertPageOpened();
 
         // make sure every element is avaliable in given color and size
         // FIXME: check it on all pages
@@ -162,14 +168,17 @@ public class WebTest extends AbstractTest {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo")
+    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 10)
     public void verifyCheckoutProcessFromProductsPageTest(ShippingInfo shippingInfo) {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);
         productsPage.open();
         productsPage.assertPageOpened();
 
-        // select random item, add it to the cart and go to checkout
+        // clear shopping cart
+        productsPage.getShoppingCart().removeAllFromCart();
+
+        // select random item, add it to the cart
         ProductCardBase selectedProductCard = RandomPicker.getRandomElement(productsPage.getProductCards());
         Product selectedProduct = selectedProductCard.getProductData();
         selectedProductCard.addToCart();
@@ -177,6 +186,8 @@ public class WebTest extends AbstractTest {
         assertTrue(productsPage.getShoppingCart().isProductInCart(selectedProduct),
                 "Selected product (%s) was not in the cart (on products page)."
                         .formatted(selectedProduct.getName()));
+
+        // go to checkout
         CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
         checkoutPageStepOne.assertPageOpened();
 

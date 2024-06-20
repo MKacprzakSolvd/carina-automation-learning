@@ -15,7 +15,8 @@ public abstract class SearchPageBase extends AbstractPage {
 
     public SearchPageBase(WebDriver driver) {
         super(driver);
-        setPageURL("catalogsearch/result/");
+        // ending page url with '?' is workaround for carina but when comparing url ending with /
+        setPageURL("catalogsearch/result/?");
     }
 
     public List<ProductCardBase> getProductCards() {

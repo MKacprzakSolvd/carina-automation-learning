@@ -1,6 +1,7 @@
 package com.solvd.gui.pages.common.components;
 
 import com.solvd.gui.pages.common.CheckoutPageStepOneBase;
+import com.solvd.gui.util.JSWaiter;
 import com.solvd.model.Product;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
@@ -118,6 +119,13 @@ public class ShoppingCartBase extends AbstractUIObject {
         return true;
     }
 
+    public void removeAllFromCart() {
+        while (!this.productNamesElements.isEmpty()) {
+            String productToRemove = this.productNamesElements.getFirst().getText();
+            removeFromCart(Product.builder().name(productToRemove).build());
+        }
+    }
+
     // TODO: make this function return CheckoutPage
 
     /**
@@ -137,6 +145,9 @@ public class ShoppingCartBase extends AbstractUIObject {
     protected void waitTillCartUpdates() {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         wait.until(not(attributeContains(this.cartCounterWrapper, "class", CART_UPDATE_INDICATING_CLASS)));
+
+        JSWaiter jsWaiter = new JSWaiter(getDriver());
+        jsWaiter.waitForJSToLoad();
     }
 
     protected void waitTillProductRemovedFromCart(Product product) {
