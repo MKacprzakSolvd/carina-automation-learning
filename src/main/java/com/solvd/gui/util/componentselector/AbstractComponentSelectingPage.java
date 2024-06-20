@@ -24,7 +24,7 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
     }
 
     /**
-     * updates components to appropriate children class
+     * updates components from this class and all parent classes
      */
     private void updateComponents() {
         Class<?> classInHierarchy = this.getClass();
@@ -40,8 +40,8 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
     private void updateComponentsForClass(Class<?> clazz) {
         // TODO: add logging
         for (var field : clazz.getDeclaredFields()) {
-            // TODO: go over each class in hierarchy
             if (field.isAnnotationPresent(AutoSelectComponent.class)) {
+                // TODO add support for collections
                 try {
                     field.setAccessible(true);
                     Class<?> matchingComponentClass = findMatchingComponentClass(field);

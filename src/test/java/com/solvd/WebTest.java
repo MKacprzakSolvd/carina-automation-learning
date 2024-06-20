@@ -239,11 +239,14 @@ public class WebTest extends AbstractTest {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo")
+    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 10, threadPoolSize = 0)
     public void verifyCheckoutFromItemDetailsPageTest(ShippingInfo shippingInfo) {
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
+
+        // clear shopping card
+        productsPage.getShoppingCart().removeAllFromCart();
 
         // select random product
         ProductCardBase selectedProductCard = RandomPicker.getRandomElement(
@@ -263,6 +266,7 @@ public class WebTest extends AbstractTest {
 
         // go to checkout
         CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
+        checkoutPageStepOne.assertPageOpened();
 
         // complete first step of checkout
         int productsInShoppingCart = checkoutPageStepOne.getProductsCount();
@@ -275,8 +279,11 @@ public class WebTest extends AbstractTest {
 
         // TODO read this data from some config
         CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        checkoutPageStepTwo.assertPageOpened();
 
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
+        checkoutPageStepThree.assertPageOpened();
+
         HomePageBase homePage = checkoutPageStepThree.returnToHomePage();
         homePage.assertPageOpened();
     }

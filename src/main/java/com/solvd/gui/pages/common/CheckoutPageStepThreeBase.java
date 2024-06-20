@@ -13,10 +13,12 @@ public abstract class CheckoutPageStepThreeBase extends AbstractPage {
 
     public CheckoutPageStepThreeBase(WebDriver driver) {
         super(driver);
+        setPageURL("checkout/onepage/success/");
+        setUiLoadedMarker(this.continueShoppingButton);
     }
 
     public HomePageBase returnToHomePage() {
-        waitTillPageLoads();
+//        waitTillPageLoads();
         this.continueShoppingButton.click();
         return initPage(getDriver(), HomePageBase.class);
     }

@@ -4,12 +4,14 @@ import com.solvd.model.Product;
 import com.solvd.model.ShippingInfo;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.not;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 public abstract class CheckoutPageStepOneBase extends AbstractPage {
     @FindBy(id = "customer-email")
@@ -54,7 +56,7 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     @FindBy(css = "#opc-sidebar .title[data-role='title']")
     private ExtendedWebElement toggleProductListButton;
     @FindBy(css = "#opc-sidebar .items-in-cart [role='heading'] > span:first-child")
-    private ExtendedWebElement productsInCartCount;
+    protected ExtendedWebElement productsInCartCount;
     @FindBy(css = "#opc-sidebar .minicart-items-wrapper")
     private ExtendedWebElement productsWrapper;
     // TODO replace with custom element
@@ -104,7 +106,9 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     }
 
     public int getProductsCount() {
-        waitUntil(visibilityOf(this.productsInCartCount), 10);
+        // TODO check if it will work without waitUntill on mobile
+        //      this wait shouldn't do anything - it's worse than carina build-in checks
+        //waitUntil(visibilityOf(this.productsInCartCount), 10);
         return Integer.parseInt(this.productsInCartCount.getText());
     }
 
@@ -124,6 +128,8 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     private void openProductsList() {
         waitForJSToLoad(30);
         if (!isProductsListOpened()) {
+            // TODO make this better, maybe just create element checkout loader
+            waitUntil(not(presenceOfElementLocated(By.id("checkout-loader"))), 10);
             this.toggleProductListButton.click();
         }
     }

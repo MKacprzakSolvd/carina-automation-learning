@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.Arrays;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 @DeviceType(pageType = DeviceType.Type.IOS_PHONE, parentClass = CheckoutPageStepOneBase.class)
 public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
@@ -44,6 +45,7 @@ public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
     public int getProductsCount() {
         waitTillPageLoads();
         openCartContents();
+        waitUntil(visibilityOf(this.productsInCartCount), 10);
         int productsCount = super.getProductsCount();
         closeCartContents();
         return productsCount;
@@ -69,6 +71,7 @@ public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
             waitForJSToLoad();
             waitUntil(elementToBeClickable(this.closeCartContentsButton), 10);
             this.closeCartContentsButton.click();
+            this.cartContentsWrapper.waitUntilElementDisappear(10);
             waitForJSToLoad();
         }
     }

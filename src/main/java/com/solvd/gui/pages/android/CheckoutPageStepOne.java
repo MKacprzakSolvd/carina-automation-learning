@@ -67,7 +67,9 @@ public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
     private void closeCartContents() {
         if (isCartContentsOpened()) {
             waitForJSToLoad();
+            waitUntil(elementToBeClickable(this.closeCartContentsButton), 10);
             this.closeCartContentsButton.click();
+            this.cartContentsWrapper.waitUntilElementDisappear(10);
             waitForJSToLoad();
         }
     }
