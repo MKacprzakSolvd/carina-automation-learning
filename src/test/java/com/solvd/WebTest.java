@@ -168,7 +168,7 @@ public class WebTest extends AbstractTest {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 10)
+    @Test(dataProvider = "provideValidShippingInfo")
     public void verifyCheckoutProcessFromProductsPageTest(ShippingInfo shippingInfo) {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);

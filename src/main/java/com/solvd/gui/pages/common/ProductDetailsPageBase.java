@@ -118,6 +118,7 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
      * informs whether alert that review was added successfully is shown
      */
     public boolean isReviewAddedSuccessfullyAlertShown() {
+        // FIXME somewhat flaky method
         waitForJSToLoad();
         for (ExtendedWebElement message : this.alerts) {
             if (message.getText().equals("You submitted your review for moderation.")) {

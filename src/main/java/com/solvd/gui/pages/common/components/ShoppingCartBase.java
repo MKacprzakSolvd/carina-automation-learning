@@ -10,9 +10,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -112,8 +110,7 @@ public class ShoppingCartBase extends AbstractUIObject {
 
         // Confirm removal in modal
         WebElement removalConfirmationButton = getDriver().findElement(this.removeProductConfirmationButton);
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        wait.until(visibilityOf(removalConfirmationButton));
+        waitUntil(visibilityOf(removalConfirmationButton), 10);
         removalConfirmationButton.click();
         waitTillProductRemovedFromCart(product);
         return true;
@@ -143,8 +140,7 @@ public class ShoppingCartBase extends AbstractUIObject {
     }
 
     protected void waitTillCartUpdates() {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        wait.until(not(attributeContains(this.cartCounterWrapper, "class", CART_UPDATE_INDICATING_CLASS)));
+        waitUntil(not(attributeContains(this.cartCounterWrapper, "class", CART_UPDATE_INDICATING_CLASS)), 10);
 
         JSWaiter jsWaiter = new JSWaiter(getDriver());
         jsWaiter.waitForJSToLoad();
@@ -152,8 +148,7 @@ public class ShoppingCartBase extends AbstractUIObject {
 
     protected void waitTillProductRemovedFromCart(Product product) {
         // TODO: check whether nested waits are a problem
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        wait.until((driver) -> !isProductInCart(product));
+        waitUntil((driver) -> !isProductInCart(product), 10);
     }
 }
 

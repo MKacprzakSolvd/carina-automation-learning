@@ -76,7 +76,8 @@ public class ProductCardBase extends AbstractUIObject {
     // TODO: add option to specify size and color
     public void addToCart() {
         // hover over product cart to show add to cart button
-        // select first size and color (if colors avaliable)
+        // FIXME it needs hover in desktop to avoid clicking on a banner
+        // select first size and color (if colors available)
         if (!this.avaliableSizes.isEmpty()) {
             this.avaliableSizes.getFirst().click();
         }

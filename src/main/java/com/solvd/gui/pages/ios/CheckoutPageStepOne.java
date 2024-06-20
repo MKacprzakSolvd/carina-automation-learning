@@ -6,9 +6,10 @@ import com.zebrunner.carina.utils.factory.DeviceType;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.Arrays;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 @DeviceType(pageType = DeviceType.Type.IOS_PHONE, parentClass = CheckoutPageStepOneBase.class)
 public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
@@ -57,7 +58,7 @@ public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
     private void openCartContents() {
         if (!isCartContentsOpened()) {
             waitForJSToLoad();
-            this.openCartContentsButton.waitUntil(ExpectedConditions.elementToBeClickable(this.openCartContentsButton), 10);
+            waitUntil(elementToBeClickable(this.openCartContentsButton), 10);
             this.openCartContentsButton.click();
             waitForJSToLoad();
         }
@@ -66,7 +67,7 @@ public class CheckoutPageStepOne extends CheckoutPageStepOneBase {
     private void closeCartContents() {
         if (isCartContentsOpened()) {
             waitForJSToLoad();
-            this.closeCartContentsButton.waitUntil(ExpectedConditions.elementToBeClickable(this.closeCartContentsButton), 10);
+            waitUntil(elementToBeClickable(this.closeCartContentsButton), 10);
             this.closeCartContentsButton.click();
             waitForJSToLoad();
         }
