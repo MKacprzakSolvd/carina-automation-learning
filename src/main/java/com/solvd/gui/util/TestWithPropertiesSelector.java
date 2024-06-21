@@ -8,6 +8,9 @@ import org.testng.annotations.BeforeTest;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * allows to load Carina properties based on TestNG suite parameters
+ */
 public abstract class TestWithPropertiesSelector extends AbstractTest {
     // TODO find better name for this parameter
     public static final String PARAMETER_NAME = "testPropertiesType";
