@@ -8,10 +8,10 @@ import com.solvd.enums.SortOrder;
 import com.solvd.gui.pages.common.*;
 import com.solvd.gui.pages.common.components.ProductCardBase;
 import com.solvd.gui.util.RandomPicker;
+import com.solvd.gui.util.TestWithPropertiesSelector;
 import com.solvd.model.Product;
 import com.solvd.model.Review;
 import com.solvd.model.ShippingInfo;
-import com.zebrunner.carina.core.AbstractTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -26,7 +26,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 
-public class WebTest extends AbstractTest {
+public class WebTest extends TestWithPropertiesSelector {
     // TODO: check if I should add volatile to logger
     private static final Logger LOGGER = LogManager.getLogger(WebTest.class.getName());
 
@@ -239,7 +239,7 @@ public class WebTest extends AbstractTest {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 10, threadPoolSize = 0)
+    @Test(dataProvider = "provideValidShippingInfo")
     public void verifyCheckoutFromItemDetailsPageTest(ShippingInfo shippingInfo) {
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
         productsPage.open();

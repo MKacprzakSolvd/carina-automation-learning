@@ -1,0 +1,26 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Web test" parallel="methods" thread-count="10">
+    <test name="Web test">
+        <parameter name="testPropertiesType" value="desktop"/>
+        <classes>
+            <class name="com.solvd.WebTest"/>
+        </classes>
+    </test>
+    <test name="Android test">
+        <parameter name="testPropertiesType" value="android"/>
+        <classes>
+            <class name="com.solvd.WebTest"/>
+        </classes>
+    </test>
+    <test name="IOS test">
+        <parameter name="testPropertiesType" value="ios"/>
+        <classes>
+            <class name="com.solvd.WebTest">
+                <methods>
+                    <include name=".*" invocation-numbers="10"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
