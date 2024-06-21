@@ -14,7 +14,9 @@ import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
 /**
- * source: https://github.com/zebrunner/carina-demo/blob/master/src/main/java/com/zebrunner/carina/demo/utils/MobileContextUtils.java
+ * source: <a href="https://github.com/zebrunner/carina-demo/blob/master/src/main/java/com/zebrunner/carina/demo/utils/MobileContextUtils.java">
+ * https://github.com/zebrunner/carina-demo/blob/master/src/main/java/com/zebrunner/carina/demo/utils/MobileContextUtils.java
+ * </a>
  */
 public class MobileContextUtils implements IDriverPool {
 

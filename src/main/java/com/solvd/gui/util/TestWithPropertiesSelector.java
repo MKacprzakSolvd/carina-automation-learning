@@ -10,13 +10,12 @@ import java.util.Optional;
 
 public abstract class TestWithPropertiesSelector extends AbstractTest {
     // TODO find better name for this parameter
-    public final String PARAMETER_NAME = "testPropertiesType";
+    public static final String PARAMETER_NAME = "testPropertiesType";
 
     @BeforeTest
     public void loadAppropriatePropertiesFile(ITestContext context) {
         CapabilitiesLoader capabilitiesLoader = new CapabilitiesLoader();
         Optional<String> testPropertiesType = getTestPropertiesType(context);
-        System.out.printf("DETECTED PROPERTIES: %s%n", testPropertiesType.orElse("NOT FOUND"));
         testPropertiesType.ifPresent(
                 propType -> capabilitiesLoader.loadCapabilities("_config-%s.properties".formatted(propType))
         );
