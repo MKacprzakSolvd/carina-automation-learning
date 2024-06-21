@@ -168,7 +168,7 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo")
+    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 5)
     public void verifyCheckoutProcessFromProductsPageTest(ShippingInfo shippingInfo) {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);
@@ -202,8 +202,11 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // TODO read this data from some config
         CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        checkoutPageStepTwo.assertPageOpened();
 
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
+        checkoutPageStepThree.assertPageOpened();
+
         HomePageBase homePage = checkoutPageStepThree.returnToHomePage();
         homePage.assertPageOpened();
     }
