@@ -328,7 +328,8 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // open product details page
         ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
-        assertTrue(productDetailsPage.isForElement(selectedProduct));
+        assertTrue(productDetailsPage.isPageForElement(selectedProduct),
+                "Opened details page is not for product '%s'.".formatted(selectedProduct.getName()));
 
         // add product to cart
         productDetailsPage.addToCart();
@@ -390,7 +391,7 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // open product details page
         ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
-        assertTrue(productDetailsPage.isForElement(selectedProduct));
+        assertTrue(productDetailsPage.isPageForElement(selectedProduct));
 
         Review review = Review.builder()
                 .rating(5)
