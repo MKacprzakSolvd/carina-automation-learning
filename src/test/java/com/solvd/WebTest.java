@@ -73,8 +73,12 @@ public class WebTest extends TestWithPropertiesSelector {
         searchPage.assertPageOpened();
         Assert.assertFalse(searchPage.getProductCards().isEmpty(), "Search for product returned no results.");
 
+        SoftAssert softAssert = new SoftAssert();
+
         for (var productCard : searchPage.getProductCards()) {
-            LOGGER.info("Product name: " + productCard.getProductData().getName());
+            String productName = productCard.getProductData().getName();
+            LOGGER.info("Product name: " + productName);
+            softAssert.assertFalse(productName.isBlank(), "Product name is blank.");
         }
     }
 
