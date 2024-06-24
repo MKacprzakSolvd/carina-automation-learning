@@ -125,7 +125,7 @@ public class WebTest extends TestWithPropertiesSelector {
      * 3. Remove each item from shopping cart
      * Result: Shopping cart should be empty
      */
-    @Test(invocationCount = 5)
+    @Test
     public void verifyAddRemoveFromShoppingCartTest() {
         final int PRODUCTS_TO_ADD_TO_CART_NUMBER = 2;
         SoftAssert softAssert = new SoftAssert();

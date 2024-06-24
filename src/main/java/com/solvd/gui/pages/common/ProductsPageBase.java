@@ -19,10 +19,16 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
-    ProductCategory productCategory;
+    @Getter
+    private String relativeUrl;
 
     @FindBy(css = ".products .product-items .product-item")
     private List<ProductCardBase> productCards;
+
+    // this element is used as load marker, and > selector is used in order to
+    // distinguish between search and products page
+    @FindBy(css = ".main > .products.wrapper")
+    private ExtendedWebElement productsWrapper;
 
     // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
     // select filter block that have 'Size' in title
@@ -50,12 +56,29 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     private ExtendedWebElement sortDirectionSelector;
 
 
-    public ProductsPageBase(WebDriver driver, ProductCategory productCategory) {
+    public ProductsPageBase(WebDriver driver) {
         super(driver);
-        this.productCategory = productCategory;
-        setPageURL(productCategory.getRelativeUrl());
-        setUiLoadedMarker(this.sortDirectionSelector);
+        setUiLoadedMarker(this.productsWrapper);
     }
+
+    public ProductsPageBase(WebDriver driver, String relativeUrl) {
+        this(driver);
+        if (relativeUrl == null) {
+            throw new IllegalArgumentException("relativeUrl cannot be null");
+        }
+        this.relativeUrl = relativeUrl;
+        setPageURL(this.relativeUrl);
+    }
+
+
+    public ProductsPageBase(WebDriver driver, ProductCategory productCategory) {
+        this(driver,
+                // hacky way to check for null pointer
+                Optional.ofNullable(
+                        productCategory.getRelativeUrl()
+                ).orElseThrow(() -> new IllegalArgumentException("productCategory cannot be null")));
+    }
+
 
     protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
         return switch (productsFilter) {
@@ -63,10 +86,6 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
             case SIZE -> this.sizeFilter;
             default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilter.name());
         };
-    }
-
-    private ProductCategory getProductCategory() {
-        return productCategory;
     }
 
     public List<ProductCardBase> getProductCards() {
@@ -99,7 +118,7 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
     public ProductsPageBase filterBy(ProductsFilter productsFilter, String option) {
-        return getFilter(productsFilter).filterBy(option, getProductCategory());
+        return getFilter(productsFilter).filterBy(option, this.relativeUrl);
     }
 
     public SortOrder getSortOrder() {
@@ -121,13 +140,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         // select correct sort type
         if (!currentSortOrder.getValue().equals(sortOrder.getValue())) {
             this.sortTypeSelector.select(sortOrder.getValue());
-            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, this.relativeUrl);
         }
 
         // select correct sort direction
         if (currentSortOrder.isAscending() != sortOrder.isAscending()) {
             this.sortDirectionSelector.click();
-            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, this.relativeUrl);
         }
 
         return productsPage;
