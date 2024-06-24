@@ -30,7 +30,7 @@ public class WebTest extends TestWithPropertiesSelector {
 
 
     /**
-     * Verify Product Search
+     * Product Search
      * <p>
      * Steps:
      * 1. Open homepage
@@ -60,9 +60,16 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
+    /**
+     * Filtering by size and color
+     * <p>
+     * Steps:
+     * 1. Filter products by random size
+     * Result: All showed products should be available in the selected size.
+     * 2. Filter products by random color
+     * Result: All showed products should be available in the selected color and size.
+     */
     @Test
-    // TODO: add logging
-    // TODO: add test case description (steps, etc)
     public void verifySizeColorFiltersTest() {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.WOMEN_TOPS);
@@ -104,6 +111,20 @@ public class WebTest extends TestWithPropertiesSelector {
         softAssert.assertAll();
     }
 
+    /**
+     * Adding and removing items from shopping cart
+     * <p>
+     * Preconditions:
+     * 1. Open https://magento.softwaretestingboard.com/men/tops-men.html
+     * <p>
+     * Steps:
+     * 1. Add two random items to the shopping cart, selecting first available size and color
+     * Result: There should appear information that the product was added to the shopping card after each addition
+     * 2. Click on the shopping cart icon
+     * Result: Shopping cart popup should appear, showing two added products
+     * 3. Remove each item from shopping cart
+     * Result: Shopping cart should be empty
+     */
     @Test
     public void verifyAddRemoveFromShoppingCartTest() {
         final int PRODUCTS_TO_ADD_TO_CART_NUMBER = 2;
@@ -149,6 +170,28 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
+    /**
+     * Checkout process from products page
+     * <p>
+     * Preconditions:
+     * 1. Open https://magento.softwaretestingboard.com/gear/bags.html
+     * <p>
+     * Steps:
+     * 1. Add random product to card
+     * Result: There should appear information that the product was added to the shopping card
+     * 2. Open shopping cart popup
+     * Result: Shopping cart popup should show, containing one selected item
+     * 3. Click proceed to checkout
+     * Result: Checkout page should load
+     * 4. Expand Order Summary
+     * Result: Order summary should contain one selected item
+     * 5. Fill in valid Shipping data , select Fixed shipping method and click Next
+     * Result: Order Review page should load, containing inserted data and ordered product, with correctly calculated order price
+     * 6. Click place order
+     * Result: Order Success page should load
+     * 7. Click continue shopping
+     * Result: Home page should load
+     */
     @Test
     public void verifyCheckoutProcessFromProductsPageTest() {
         // open products page
@@ -193,6 +236,24 @@ public class WebTest extends TestWithPropertiesSelector {
         homePage.assertPageOpened();
     }
 
+    /**
+     * Item sorting
+     * <p>
+     * Preconditions:
+     * 1. Open https://magento.softwaretestingboard.com/women/bottoms-women.html
+     * <p>
+     * Steps:
+     * 1. Sort items by product name in ascending order
+     * Result: Items should be sorted by product name in ascending order
+     * 2. Sort items by product name in descending order
+     * Result: Items should be sorted by product name in descending order
+     * 3. Sort items by price in ascending order
+     * Result: Items should be sorted by price in ascending order
+     * 4. Sort items by price in descending order
+     * Result: Items should be sorted by price in descending order
+     * 5. Go to next page
+     * Result: item's prices should continue to descend
+     */
     @Test
     public void verifyItemSortingTest() {
         SoftAssert softAssert = new SoftAssert();
@@ -224,6 +285,30 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
+    /**
+     * Checkout process from item's details page
+     * <p>
+     * Preconditions:
+     * 1. Open https://magento.softwaretestingboard.com/men/bottoms-men.html
+     * <p>
+     * Steps:
+     * 1. Select random item, and go to its details page
+     * Result: Details page of selected item should load, with item details (title, price) matching selected item
+     * 2. Select random size, color and quantity (between 1 and 100) and add item to cart
+     * Result: There should appear information that the product was added to the shopping card
+     * 3. Click on the shopping cart
+     * Result: Shopping cart popup should appear, containing one selected item in the chosen color, size and quantity
+     * 4. Click proceed to checkout
+     * Result: Checkout page should load
+     * 5. Expand Order Summary
+     * Result: Order summary should contain one selected item in the chosen color, size and quantity
+     * 6. Fill in valid Shipping data , select Fixed shipping method and click Next
+     * Result: Order Review page should load, containing inserted data and ordered product, with correctly calculated order price
+     * 7. Click place order
+     * Result: Order Success page should load
+     * 8. Click continue shopping
+     * Result: Home page should load
+     */
     @Test
     public void verifyCheckoutFromItemDetailsPageTest() {
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
@@ -275,6 +360,20 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
+    /**
+     * Adding item review
+     * <p>
+     * Preconditions:
+     * 1. Open https://magento.softwaretestingboard.com/gear/fitness-equipment.html
+     * <p>
+     * Steps:
+     * 1. Select random item, and go to its details page
+     * Result: Details page of selected item should load, with item details (title, price) matching selected item
+     * 2. Click on the reviews tab
+     * Result: Reviews tab should open with number of reviews, and its average matching product card
+     * 3. Fill in review form with valid data and click submit
+     * Result: Information should appear that review was successfully submitted to moderation
+     */
     @Test
     public void verifyAddingItemReviewTest() {
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_FITNESS_EQUIPMENT);
