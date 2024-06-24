@@ -47,7 +47,7 @@ public class ContextSwitchingTest extends AbstractTest {
 
     @Test
     public void verifyAddingItemReviewInNewCardTest() {
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_FITNESS_EQUIPMENT);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.GEAR_FITNESS_EQUIPMENT);
         productsPage.open();
         productsPage.assertPageOpened();
 

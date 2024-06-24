@@ -58,7 +58,7 @@ public class ProductFilterBase extends AbstractUIObject {
             if (optionElement.getAttribute("option-label").equals(option)) {
                 expand();
                 optionElement.click();
-                return initPage(getDriver(), ProductsPageBase.class, relativeUrl);
+                return initPage(getDriver(), ProductsPageBase.class, getDriver(), relativeUrl);
             }
         }
         throw new IllegalArgumentException("Option not found: " + option);

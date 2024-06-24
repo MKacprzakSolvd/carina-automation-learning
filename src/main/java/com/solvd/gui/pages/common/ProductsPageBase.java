@@ -140,13 +140,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         // select correct sort type
         if (!currentSortOrder.getValue().equals(sortOrder.getValue())) {
             this.sortTypeSelector.select(sortOrder.getValue());
-            productsPage = initPage(getDriver(), ProductsPageBase.class, this.relativeUrl);
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), this.relativeUrl);
         }
 
         // select correct sort direction
         if (currentSortOrder.isAscending() != sortOrder.isAscending()) {
             this.sortDirectionSelector.click();
-            productsPage = initPage(getDriver(), ProductsPageBase.class, this.relativeUrl);
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), this.relativeUrl);
         }
 
         return productsPage;

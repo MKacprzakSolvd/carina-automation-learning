@@ -72,7 +72,7 @@ public class WebTest extends TestWithPropertiesSelector {
     @Test
     public void verifySizeColorFiltersTest() {
         // open products page
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.WOMEN_TOPS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.WOMEN_TOPS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -131,7 +131,7 @@ public class WebTest extends TestWithPropertiesSelector {
         SoftAssert softAssert = new SoftAssert();
 
         // open products page
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_TOPS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.MEN_TOPS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -198,7 +198,7 @@ public class WebTest extends TestWithPropertiesSelector {
     @Test
     public void verifyCheckoutProcessFromProductsPageTest() {
         // open products page
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.GEAR_BAGS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -261,7 +261,7 @@ public class WebTest extends TestWithPropertiesSelector {
     public void verifyItemSortingTest() {
         SoftAssert softAssert = new SoftAssert();
 
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.WOMEN_BOTTOMS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.WOMEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -314,7 +314,7 @@ public class WebTest extends TestWithPropertiesSelector {
      */
     @Test
     public void verifyCheckoutFromItemDetailsPageTest() {
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.MEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -380,7 +380,7 @@ public class WebTest extends TestWithPropertiesSelector {
      */
     @Test
     public void verifyAddingItemReviewTest() {
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_FITNESS_EQUIPMENT);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.GEAR_FITNESS_EQUIPMENT);
         productsPage.open();
         productsPage.assertPageOpened();
 
