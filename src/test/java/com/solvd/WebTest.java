@@ -3,19 +3,17 @@ package com.solvd;
 
 import com.solvd.enums.ProductCategory;
 import com.solvd.enums.ProductsFilter;
-import com.solvd.enums.ShippingMethod;
 import com.solvd.enums.SortOrder;
 import com.solvd.gui.pages.common.*;
 import com.solvd.gui.pages.common.components.ProductCardBase;
 import com.solvd.gui.util.RandomPicker;
+import com.solvd.gui.util.ShippingInfoProvider;
 import com.solvd.gui.util.TestWithPropertiesSelector;
 import com.solvd.model.Product;
 import com.solvd.model.Review;
-import com.solvd.model.ShippingInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -29,27 +27,6 @@ import static org.testng.Assert.assertTrue;
 public class WebTest extends TestWithPropertiesSelector {
     // TODO: check if I should add volatile to logger
     private static final Logger LOGGER = LogManager.getLogger(WebTest.class.getName());
-
-    @DataProvider()
-    public Object[][] provideValidShippingInfo() {
-        return new Object[][]{
-                {
-                        ShippingInfo.builder()
-                                .email("a@b.com")
-                                .firstName("John")
-                                .lastName("Smith")
-                                .company("Postal Inc.")
-                                .addressLine1("ul. Wielopole 2")
-                                .city("Kraków")
-                                .province("małopolskie")
-                                .postalCode("12-345")
-                                .country("Poland")
-                                .phoneNumber("123456789")
-                                .shippingMethod(ShippingMethod.FIXED)
-                                .build()
-                }
-        };
-    }
 
 
     /**
@@ -172,8 +149,8 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo", invocationCount = 5)
-    public void verifyCheckoutProcessFromProductsPageTest(ShippingInfo shippingInfo) {
+    @Test
+    public void verifyCheckoutProcessFromProductsPageTest() {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_BAGS);
         productsPage.open();
@@ -205,7 +182,8 @@ public class WebTest extends TestWithPropertiesSelector {
                         .formatted(selectedProduct.getName()));
 
         // TODO read this data from some config
-        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(
+                ShippingInfoProvider.provideValidShippingInfo());
         checkoutPageStepTwo.assertPageOpened();
 
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
@@ -246,8 +224,8 @@ public class WebTest extends TestWithPropertiesSelector {
     }
 
 
-    @Test(dataProvider = "provideValidShippingInfo")
-    public void verifyCheckoutFromItemDetailsPageTest(ShippingInfo shippingInfo) {
+    @Test
+    public void verifyCheckoutFromItemDetailsPageTest() {
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.MEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
@@ -285,7 +263,8 @@ public class WebTest extends TestWithPropertiesSelector {
                         .formatted(selectedProduct.getName()));
 
         // TODO read this data from some config
-        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(shippingInfo);
+        CheckoutPageStepTwoBase checkoutPageStepTwo = checkoutPageStepOne.goToNextStep(
+                ShippingInfoProvider.provideValidShippingInfo());
         checkoutPageStepTwo.assertPageOpened();
 
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
