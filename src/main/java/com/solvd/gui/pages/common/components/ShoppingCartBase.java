@@ -43,7 +43,7 @@ public class ShoppingCartBase extends AbstractUIObject {
     @FindBy(css = ".product-item-details")
     private List<ShoppingCartProduct> shoppingCartProducts;
 
-    // confirmation button from modal. It it outside of shopping cart root element
+    // confirmation button from modal. It is outside of shopping cart root element
     private By removeProductConfirmationButton = By.cssSelector(".modals-wrapper .action-accept");
 
     public ShoppingCartBase(WebDriver driver, SearchContext searchContext) {
