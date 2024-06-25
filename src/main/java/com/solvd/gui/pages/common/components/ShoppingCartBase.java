@@ -11,7 +11,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
@@ -38,11 +40,8 @@ public class ShoppingCartBase extends AbstractUIObject {
     @FindBy(id = "top-cart-btn-checkout")
     private ExtendedWebElement toCheckoutButton;
 
-    // TODO: replace with custom element
-    @FindBy(css = ".product-item-details .product-item-name a")
-    private List<ExtendedWebElement> productNamesElements;
-    @FindBy(css = ".product-item-details .delete")
-    private List<ExtendedWebElement> productRemoveButtons;
+    @FindBy(css = ".product-item-details")
+    private List<ShoppingCartProduct> shoppingCartProducts;
 
     // confirmation button from modal. It it outside of shopping cart root element
     private By removeProductConfirmationButton = By.cssSelector(".modals-wrapper .action-accept");
@@ -83,8 +82,8 @@ public class ShoppingCartBase extends AbstractUIObject {
         }
         // TODO: implement Optional<ProductCartCard> findProductCard() method
         //       and use it here and in remove from cart (and find better name for it)
-        for (ExtendedWebElement productNameElement : this.productNamesElements) {
-            if (productNameElement.getText().equals(product.getName())) {
+        for (ShoppingCartProduct shoppingCartProduct : this.shoppingCartProducts) {
+            if (shoppingCartProduct.getProductName().equals(product.getName())) {
                 return true;
             }
         }
@@ -92,8 +91,27 @@ public class ShoppingCartBase extends AbstractUIObject {
     }
 
     /**
+     * Tries to find product from shopping cart by name
+     */
+    public Optional<Product> findProductByName(String productName) {
+        open();
+        return this.shoppingCartProducts.stream()
+                .filter(shoppingCartProduct -> shoppingCartProduct.getProductName().equals(productName))
+                .map(ShoppingCartProduct::toProduct)
+                .findAny();
+    }
+
+    /**
+     * Tries to find product from shopping cart by name, which it gets from passed product
+     * Same as calling findProductByName(product.getName())
+     */
+    public Optional<Product> findProductByName(Product product) {
+        return findProductByName(product.getName());
+    }
+
+    /**
      * tries to remove product  from cart
-     * return true on succesfull removal,
+     * return true on successful removal,
      * false on fail (i.e. product not in cart)
      */
     public boolean removeFromCart(Product product) {
@@ -101,12 +119,12 @@ public class ShoppingCartBase extends AbstractUIObject {
         if (!isProductInCart(product)) {
             return false;
         }
-        for (int i = 0; i < this.productNamesElements.size(); i++) {
-            if (product.getName().equals(this.productNamesElements.get(i).getText())) {
-                this.productRemoveButtons.get(i).click();
-                break;
-            }
-        }
+        // find product by name and remove for cart
+        this.shoppingCartProducts.stream()
+                .filter(shoppingCartProduct -> shoppingCartProduct.getProductName().equals(product.getName()))
+                .findAny()
+                .get()
+                .clickRemove();
 
         // Confirm removal in modal
         WebElement removalConfirmationButton = getDriver().findElement(this.removeProductConfirmationButton);
@@ -117,8 +135,8 @@ public class ShoppingCartBase extends AbstractUIObject {
     }
 
     public void removeAllFromCart() {
-        while (!this.productNamesElements.isEmpty()) {
-            String productToRemove = this.productNamesElements.getFirst().getText();
+        while (!this.shoppingCartProducts.isEmpty()) {
+            String productToRemove = this.shoppingCartProducts.getFirst().getProductName();
             removeFromCart(Product.builder().name(productToRemove).build());
         }
     }
@@ -149,6 +167,45 @@ public class ShoppingCartBase extends AbstractUIObject {
     protected void waitTillProductRemovedFromCart(Product product) {
         // TODO: check whether nested waits are a problem
         waitUntil((driver) -> !isProductInCart(product), 10);
+    }
+
+
+    public static class ShoppingCartProduct extends AbstractUIObject {
+        @FindBy(css = ".product-item-name a")
+        private ExtendedWebElement productName;
+
+        @FindBy(css = ".price-excluding-tax .price")
+        private ExtendedWebElement productPrice;
+
+        @FindBy(css = ".delete")
+        private ExtendedWebElement productDeleteButton;
+
+        public ShoppingCartProduct(WebDriver driver) {
+            super(driver);
+        }
+
+        public ShoppingCartProduct(WebDriver driver, SearchContext searchContext) {
+            super(driver, searchContext);
+        }
+
+        public String getProductName() {
+            return this.productName.getText();
+        }
+
+        public BigDecimal getProductPrice() {
+            return new BigDecimal(this.productPrice.getText().substring(1));
+        }
+
+        public void clickRemove() {
+            this.productDeleteButton.click();
+        }
+
+        public Product toProduct() {
+            return Product.builder()
+                    .name(getProductName())
+                    .price(getProductPrice())
+                    .build();
+        }
     }
 }
 

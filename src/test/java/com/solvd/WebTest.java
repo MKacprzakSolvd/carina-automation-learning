@@ -159,7 +159,7 @@ public class WebTest extends TestWithPropertiesSelector {
         List<Product> selectedProducts = RandomPicker.getRandomElements(
                 productsPage.getProducts(), PRODUCTS_TO_ADD_TO_CART_NUMBER);
 
-        // add them to cart & check if they were added
+        // add them to cart
         for (Product product : selectedProducts) {
             Optional<ProductCardBase> productCard = productsPage.findProductCard(product);
             softAssert.assertTrue(productCard.isPresent(),
@@ -167,14 +167,25 @@ public class WebTest extends TestWithPropertiesSelector {
                             .formatted(product.getName()));
             productCard.get().addToCart();
         }
+        // check if they were added
+        // 1. check if number of products in cart is as expected
         int itemsInShoppingCart = productsPage.getShoppingCart().getProductsCount();
         softAssert.assertEquals(itemsInShoppingCart, PRODUCTS_TO_ADD_TO_CART_NUMBER,
                 "Number of products in shopping cart (%d) doesn't match expected number (%d)."
                         .formatted(itemsInShoppingCart, PRODUCTS_TO_ADD_TO_CART_NUMBER));
+        // 2. check if each product is in the cart
         for (Product product : selectedProducts) {
+            Optional<Product> cartProduct = productsPage.getShoppingCart().findProductByName(product);
             softAssert.assertTrue(
-                    productsPage.getShoppingCart().isProductInCart(product),
-                    "Product '%s' was not in the shopping cart".formatted(product.getName()));
+                    cartProduct.isPresent(),
+                    "Product '%s' was not in the shopping cart".formatted(product.getName())
+            );
+            if (cartProduct.isPresent()) {
+                softAssert.assertFalse(
+                        product.hasDifferences(cartProduct.get()),
+                        "Product '%s' differs from the one in the shopping cart".formatted(product.getName())
+                );
+            }
         }
 
         // remove products from card & check if they were removed
