@@ -91,9 +91,12 @@ public class WebTest extends TestWithPropertiesSelector {
             softAssert.assertTrue(productsSelectedSize.isPresent(),
                     "Size (%s) of product '%s' is not selected."
                             .formatted(randomlySelectedSize, productCard.getName()));
-            softAssert.assertEquals(productsSelectedSize.get(), randomlySelectedSize,
-                    "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
-                            .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
+            if (productsSelectedSize.isPresent()) {
+                softAssert.assertEquals(
+                        productsSelectedSize.get(), randomlySelectedSize,
+                        "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
+                                .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
+            }
         }
 
         // filter by random color
@@ -113,16 +116,22 @@ public class WebTest extends TestWithPropertiesSelector {
             softAssert.assertTrue(productsSelectedSize.isPresent(),
                     "Size (%s) of product '%s' is not selected."
                             .formatted(randomlySelectedSize, productCard.getName()));
-            softAssert.assertEquals(productsSelectedSize.get(), randomlySelectedSize,
-                    "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
-                            .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
+            if (productsSelectedSize.isPresent()) {
+                softAssert.assertEquals(
+                        productsSelectedSize.get(), randomlySelectedSize,
+                        "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
+                                .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
+            }
             // check selected color
             softAssert.assertTrue(productsSelectedColor.isPresent(),
                     "Color (%s) of product '%s' is not selected."
                             .formatted(randomlySelectedColor, productCard.getName()));
-            softAssert.assertEquals(productsSelectedColor.get(), randomlySelectedColor,
-                    "Incorrect color of product '%s' selected. Expected '%s', but got '%s'."
-                            .formatted(productCard.getProductName(), randomlySelectedColor, productsSelectedColor.get()));
+            if (productsSelectedColor.isPresent()) {
+                softAssert.assertEquals(
+                        productsSelectedColor.get(), randomlySelectedColor,
+                        "Incorrect color of product '%s' selected. Expected '%s', but got '%s'."
+                                .formatted(productCard.getProductName(), randomlySelectedColor, productsSelectedColor.get()));
+            }
         }
 
         softAssert.assertAll();
@@ -165,7 +174,7 @@ public class WebTest extends TestWithPropertiesSelector {
             softAssert.assertTrue(productCard.isPresent(),
                     "Unable to find product card corresponding to product '%s' in products page"
                             .formatted(product.getName()));
-            productCard.get().addToCart();
+            productCard.ifPresent(ProductCardBase::addToCart);
         }
         // check if they were added
         // 1. check if number of products in cart is as expected
