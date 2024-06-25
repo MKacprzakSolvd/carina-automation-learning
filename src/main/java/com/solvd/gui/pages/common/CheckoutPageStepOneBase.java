@@ -93,7 +93,7 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
         // TODO maybe change this to select province by value??
         this.provinceDropdown.select(shippingInfo.getProvince());
 
-        // FIXME add checking whether shipping method is avaliable
+        // FIXME add checking whether shipping method is available
         switch (shippingInfo.getShippingMethod()) {
             case FIXED -> this.fixedRateShippingMethodRadio.click();
             case TABLE_RATE -> this.tableRateShippingMethodRadio.click();
@@ -106,14 +106,14 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     }
 
     public int getProductsCount() {
-        // TODO check if it will work without waitUntill on mobile
+        // TODO check if it will work without waitUntil on mobile
         //      this wait shouldn't do anything - it's worse than carina build-in checks
         //waitUntil(visibilityOf(this.productsInCartCount), 10);
         return Integer.parseInt(this.productsInCartCount.getText());
     }
 
     public boolean isProductInCart(Product product) {
-        // TODO implement comparison based on all avaliable data (price, color, etc)
+        // TODO implement comparison based on all available data (price, color, etc)
         openProductsList();
         waitForJSToLoad(30);
         return productNames.stream()

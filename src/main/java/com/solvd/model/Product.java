@@ -16,7 +16,7 @@ public class Product {
     private Integer rating;
     private Integer reviewNumber;
     private Boolean inStock;
-    // TODO add avaliable colors and sizes
+    // TODO add available colors and sizes
 
     /**
      * Returns true, if there are any different field values
