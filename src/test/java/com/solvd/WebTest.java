@@ -77,35 +77,52 @@ public class WebTest extends TestWithPropertiesSelector {
         productsPage.assertPageOpened();
 
         // filter by random size
-        String randomSizeOption = RandomPicker.getRandomElement(
+        String randomlySelectedSize = RandomPicker.getRandomElement(
                 productsPage.getFilterOptions(ProductsFilter.SIZE)
         );
-        productsPage = productsPage.filterBy(ProductsFilter.SIZE, randomSizeOption);
+        productsPage = productsPage.filterBy(ProductsFilter.SIZE, randomlySelectedSize);
         productsPage.assertPageOpened();
 
-        // make sure every element is available in given size
+        // make sure that correct size is selected for every element
         // FIXME: check it on all pages
         SoftAssert softAssert = new SoftAssert();
         for (ProductCardBase productCard : productsPage.getProductCards()) {
-            softAssert.assertTrue(productCard.isAvailableInSize(randomSizeOption),
-                    "Product: %s is not available in size '%s'".formatted(productCard.getProductName(), randomSizeOption));
+            Optional<String> productsSelectedSize = productCard.getSelectedSize();
+            softAssert.assertTrue(productsSelectedSize.isPresent(),
+                    "Size (%s) of product '%s' is not selected."
+                            .formatted(randomlySelectedSize, productCard.getName()));
+            softAssert.assertEquals(productsSelectedSize.get(), randomlySelectedSize,
+                    "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
+                            .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
         }
 
         // filter by random color
-        String randomColorOption = RandomPicker.getRandomElement(
+        String randomlySelectedColor = RandomPicker.getRandomElement(
                 productsPage.getFilterOptions(ProductsFilter.COLOR)
         );
-        productsPage = productsPage.filterBy(ProductsFilter.COLOR, randomColorOption);
+        productsPage = productsPage.filterBy(ProductsFilter.COLOR, randomlySelectedColor);
         productsPage.assertPageOpened();
 
-        // make sure every element is avaliable in given color and size
+        // make sure that for every element correct size and color is selected
         // FIXME: check it on all pages
         // TODO: test for case when no elements found with selected filters
         for (ProductCardBase productCard : productsPage.getProductCards()) {
-            softAssert.assertTrue(productCard.isAvailableInSize(randomSizeOption),
-                    "Product: %s is not available in size '%s;".formatted(productCard.getProductName(), randomSizeOption));
-            softAssert.assertTrue(productCard.isAvailableInColor(randomColorOption),
-                    "Product: %s is not available in color '%s'".formatted(productCard.getProductName(), randomColorOption));
+            Optional<String> productsSelectedSize = productCard.getSelectedSize();
+            Optional<String> productsSelectedColor = productCard.getSelectedColor();
+            // check selected size
+            softAssert.assertTrue(productsSelectedSize.isPresent(),
+                    "Size (%s) of product '%s' is not selected."
+                            .formatted(randomlySelectedSize, productCard.getName()));
+            softAssert.assertEquals(productsSelectedSize.get(), randomlySelectedSize,
+                    "Incorrect size of product '%s' selected. Expected '%s', but got '%s'."
+                            .formatted(productCard.getProductName(), randomlySelectedSize, productsSelectedSize.get()));
+            // check selected color
+            softAssert.assertTrue(productsSelectedColor.isPresent(),
+                    "Color (%s) of product '%s' is not selected."
+                            .formatted(randomlySelectedColor, productCard.getName()));
+            softAssert.assertEquals(productsSelectedColor.get(), randomlySelectedColor,
+                    "Incorrect color of product '%s' selected. Expected '%s', but got '%s'."
+                            .formatted(productCard.getProductName(), randomlySelectedColor, productsSelectedColor.get()));
         }
 
         softAssert.assertAll();

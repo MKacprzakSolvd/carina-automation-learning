@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductCardBase extends AbstractUIObject {
     @FindBy(xpath = ".//*[contains(@class,'product-item-name')]//a[contains(@class,'product-item-link')]")
@@ -59,6 +60,16 @@ public class ProductCardBase extends AbstractUIObject {
                 .toList();
     }
 
+    /**
+     * Returns currently selected size of product, if any is selected
+     */
+    public Optional<String> getSelectedSize() {
+        return this.avaliableSizes.stream()
+                .filter(element -> element.getAttribute("aria-checked").equals("true"))
+                .map(element -> element.getAttribute("option-label"))
+                .findFirst();
+    }
+
     public boolean isAvailableInSize(String size) {
         return getAvaliableSizes().contains(size);
     }
@@ -67,6 +78,16 @@ public class ProductCardBase extends AbstractUIObject {
         return this.avaliableColors.stream()
                 .map(webElement -> webElement.getAttribute("option-label"))
                 .toList();
+    }
+
+    /**
+     * Returns currently selected color of product, if any is selected
+     */
+    public Optional<String> getSelectedColor() {
+        return this.avaliableColors.stream()
+                .filter(element -> element.getAttribute("aria-checked").equals("true"))
+                .map(element -> element.getAttribute("option-label"))
+                .findFirst();
     }
 
     public boolean isAvailableInColor(String color) {
