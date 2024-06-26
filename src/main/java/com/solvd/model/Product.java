@@ -31,11 +31,13 @@ public class Product {
         if (other == null) {
             return true;
         }
-        if (differsInValue(getName(), other.getName())) return true;
-        if (differsInValue(getPrice(), other.getPrice(), (a, b) -> a.compareTo(b) == 0)) return true;
-        if (differsInValue(getRating(), other.getRating())) return true;
-        if (differsInValue(getReviewNumber(), other.getReviewNumber())) return true;
-        if (differsInValue(getInStock(), other.getInStock())) return true;
+        if (differsInValue(getName(), other.getName())
+                || differsInValue(getPrice(), other.getPrice(), (a, b) -> a.compareTo(b) == 0)
+                || differsInValue(getRating(), other.getRating())
+                || differsInValue(getReviewNumber(), other.getReviewNumber())
+                || differsInValue(getInStock(), other.getInStock())) {
+            return true;
+        }
         return false;
     }
 
