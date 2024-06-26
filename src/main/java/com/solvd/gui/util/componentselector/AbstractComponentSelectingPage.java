@@ -89,7 +89,7 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
                 && componentForAnnotations.length > 0) {
             // get all device types supported by component of type clazz
             List<DeviceType.Type> componentDeviceTypes = Arrays.stream(componentForAnnotations)
-                    .map(ComponentFor::type)
+                    .map(ComponentFor::value)
                     .toList();
             // get device type this page is designed for
             DeviceType.Type pageDeviceType = this.getClass().getAnnotation(DeviceType.class).pageType();

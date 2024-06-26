@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Repeatable(ComponentForAny.class)
 public @interface ComponentFor {
-    public DeviceType.Type type();
+    public DeviceType.Type value();
 }
