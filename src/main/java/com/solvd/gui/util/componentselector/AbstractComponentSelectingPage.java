@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 
 
 // FIXME: figure out how to avoid double initialization of components (first it creates base class,
@@ -74,13 +76,24 @@ public abstract class AbstractComponentSelectingPage extends AbstractPage {
         return null;
     }
 
+    /**
+     * Checks if specific component subtype is suitable for this page.
+     * I.e. if I pass class of ShoppingCart component for android, and this object is
+     * an instance of page for android, then this method will return true.
+     *
+     * @param clazz class (or subclass) of some component on this page
+     */
     private boolean isComponentClassMatching(Class<?> clazz) {
+        ComponentFor[] componentForAnnotations = clazz.getAnnotationsByType(ComponentFor.class);
         if (this.getClass().isAnnotationPresent(DeviceType.class)
-                && clazz.isAnnotationPresent(ComponentFor.class)) {
-            DeviceType.Type componentDeviceType = clazz.getAnnotation(ComponentFor.class).type();
+                && componentForAnnotations.length > 0) {
+            // get all device types supported by component of type clazz
+            List<DeviceType.Type> componentDeviceTypes = Arrays.stream(componentForAnnotations)
+                    .map(ComponentFor::type)
+                    .toList();
+            // get device type this page is designed for
             DeviceType.Type pageDeviceType = this.getClass().getAnnotation(DeviceType.class).pageType();
-            return componentDeviceType == pageDeviceType
-                    && componentDeviceType != null;
+            return componentDeviceTypes.contains(pageDeviceType);
         }
         return false;
     }
