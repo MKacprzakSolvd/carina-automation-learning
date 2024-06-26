@@ -67,7 +67,7 @@ public class ProductCardBase extends AbstractUIObject {
         return this.availableSizes.stream()
                 .filter(element -> element.getAttribute("aria-checked").equals("true"))
                 .map(element -> element.getAttribute("option-label"))
-                .findFirst();
+                .findAny();
     }
 
     public boolean isAvailableInSize(String size) {
@@ -87,7 +87,7 @@ public class ProductCardBase extends AbstractUIObject {
         return this.availableColors.stream()
                 .filter(element -> element.getAttribute("aria-checked").equals("true"))
                 .map(element -> element.getAttribute("option-label"))
-                .findFirst();
+                .findAny();
     }
 
     public boolean isAvailableInColor(String color) {
