@@ -20,7 +20,6 @@ public abstract class SearchPageBase extends AbstractPage {
     }
 
     public List<ProductCardBase> getProductCards() {
-        System.out.println(this.productCards.size());
         return Collections.unmodifiableList(this.productCards);
     }
 }

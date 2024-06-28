@@ -68,7 +68,10 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
                 this.productPrice.getAttribute("data-price-amount"));
     }
 
-    public boolean isForElement(Product product) {
+    /**
+     * Check if this details page is a details page for specific product
+     */
+    public boolean isPageForElement(Product product) {
         // TODO improve (move comparison to Product class)
         return product.getName().equals(getProductName())
                 // warning: you cannot replace compareTo with equals

@@ -7,6 +7,14 @@ import org.openqa.selenium.WebDriver;
 
 @DeviceType(pageType = DeviceType.Type.IOS_PHONE, parentClass = ProductsPageBase.class)
 public class ProductsPage extends ProductsPageBase {
+    public ProductsPage(WebDriver driver) {
+        super(driver);
+    }
+
+    public ProductsPage(WebDriver driver, String relativeUrl) {
+        super(driver, relativeUrl);
+    }
+
     public ProductsPage(WebDriver driver, ProductCategory productCategory) {
         super(driver, productCategory);
     }

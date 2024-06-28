@@ -1,6 +1,5 @@
 package com.solvd.gui.pages.common.components;
 
-import com.solvd.enums.ProductCategory;
 import com.solvd.gui.pages.common.ProductsPageBase;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractUIObject;
@@ -53,13 +52,13 @@ public class ProductFilterBase extends AbstractUIObject {
         return getRootExtendedElement().getAttribute("class").contains("active");
     }
 
-    public ProductsPageBase filterBy(String option, ProductCategory productCategory) {
+    public ProductsPageBase filterBy(String option, String relativeUrl) {
         expand();
         for (ExtendedWebElement optionElement : this.options) {
             if (optionElement.getAttribute("option-label").equals(option)) {
                 expand();
                 optionElement.click();
-                return initPage(getDriver(), ProductsPageBase.class, productCategory);
+                return initPage(getDriver(), ProductsPageBase.class, getDriver(), relativeUrl);
             }
         }
         throw new IllegalArgumentException("Option not found: " + option);

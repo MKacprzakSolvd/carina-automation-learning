@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductCardBase extends AbstractUIObject {
     @FindBy(xpath = ".//*[contains(@class,'product-item-name')]//a[contains(@class,'product-item-link')]")
@@ -22,9 +23,9 @@ public class ProductCardBase extends AbstractUIObject {
     private ExtendedWebElement link;
 
     @FindBy(xpath = ".//*[@attribute-code='size']//*[@option-label]")
-    private List<ExtendedWebElement> avaliableSizes;
+    private List<ExtendedWebElement> availableSizes;
     @FindBy(xpath = ".//*[@attribute-code='color']//*[@option-label]")
-    private List<ExtendedWebElement> avaliableColors;
+    private List<ExtendedWebElement> availableColors;
 
     @FindBy(css = ".product-item-details .tocart")
     private ExtendedWebElement addToCartButton;
@@ -53,24 +54,44 @@ public class ProductCardBase extends AbstractUIObject {
         return this.link.getAttribute("href");
     }
 
-    public List<String> getAvaliableSizes() {
-        return this.avaliableSizes.stream()
+    public List<String> getAvailableSizes() {
+        return this.availableSizes.stream()
                 .map(webElement -> webElement.getAttribute("option-label"))
                 .toList();
+    }
+
+    /**
+     * Returns currently selected size of product, if any is selected
+     */
+    public Optional<String> getSelectedSize() {
+        return this.availableSizes.stream()
+                .filter(element -> element.getAttribute("aria-checked").equals("true"))
+                .map(element -> element.getAttribute("option-label"))
+                .findAny();
     }
 
     public boolean isAvailableInSize(String size) {
-        return getAvaliableSizes().contains(size);
+        return getAvailableSizes().contains(size);
     }
 
-    public List<String> getAvaliableColors() {
-        return this.avaliableColors.stream()
+    public List<String> getAvailableColors() {
+        return this.availableColors.stream()
                 .map(webElement -> webElement.getAttribute("option-label"))
                 .toList();
     }
 
+    /**
+     * Returns currently selected color of product, if any is selected
+     */
+    public Optional<String> getSelectedColor() {
+        return this.availableColors.stream()
+                .filter(element -> element.getAttribute("aria-checked").equals("true"))
+                .map(element -> element.getAttribute("option-label"))
+                .findAny();
+    }
+
     public boolean isAvailableInColor(String color) {
-        return getAvaliableColors().contains(color);
+        return getAvailableColors().contains(color);
     }
 
     // TODO: add option to specify size and color
@@ -79,11 +100,11 @@ public class ProductCardBase extends AbstractUIObject {
         // FIXME it needs hover in desktop to avoid clicking on a banner (check is scrollTo solved problem)
         this.addToCartButton.scrollTo();
         // select first size and color (if colors available)
-        if (!this.avaliableSizes.isEmpty()) {
-            this.avaliableSizes.getFirst().click();
+        if (!this.availableSizes.isEmpty()) {
+            this.availableSizes.getFirst().click();
         }
-        if (!this.avaliableColors.isEmpty()) {
-            this.avaliableColors.getFirst().click();
+        if (!this.availableColors.isEmpty()) {
+            this.availableColors.getFirst().click();
         }
         // click it
         this.addToCartButton.click();
