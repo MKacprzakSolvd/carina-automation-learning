@@ -16,13 +16,17 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElemen
 public abstract class CheckoutPageStepOneBase extends AbstractPage {
     @FindBy(id = "customer-email")
     private ExtendedWebElement emailField;
+
+    // name fields
     @FindBy(xpath = "//*[@name='shippingAddress.firstname']//*[@name='firstname']")
     private ExtendedWebElement firstNameField;
     @FindBy(xpath = "//*[@name='shippingAddress.lastname']//*[@name='lastname']")
     private ExtendedWebElement lastNameField;
+
     @FindBy(xpath = "//*[@name='shippingAddress.company']//*[@name='company']")
     private ExtendedWebElement companyField;
 
+    // address fields
     @FindBy(xpath = "//*[@name='shippingAddress.street.0']//*[@name='street[0]']")
     private ExtendedWebElement addressLine1Field;
     @FindBy(xpath = "//*[@name='shippingAddress.street.1']//*[@name='street[1]']")
@@ -32,19 +36,23 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
 
     @FindBy(xpath = "//*[@name='shippingAddress.city']//*[@name='city']")
     private ExtendedWebElement cityField;
+
     // state/province is either dropdown or field, depending on country
     @FindBy(xpath = "//*[@name='shippingAddress.region_id']//*[@name='region_id']")
     private ExtendedWebElement provinceDropdown;
     @FindBy(xpath = "//*[@name='shippingAddress.region']//*[@name='region']")
     private ExtendedWebElement provinceField;
+
     @FindBy(xpath = "//*[@name='shippingAddress.postcode']//*[@name='postcode']")
     private ExtendedWebElement postalCodeField;
+
     @FindBy(xpath = "//*[@name='shippingAddress.country_id']//*[@name='country_id']")
     private ExtendedWebElement countryDropdown;
 
     @FindBy(xpath = "//*[@name='shippingAddress.telephone']//*[@name='telephone']")
     private ExtendedWebElement phoneNumberField;
 
+    // shipping rates
     @FindBy(xpath = "//*[@id='checkout-shipping-method-load']//*[@value='flatrate_flatrate']")
     private ExtendedWebElement fixedRateShippingMethodRadio;
     @FindBy(xpath = "//*[@id='checkout-shipping-method-load']//*[@value='tablerate_bestway']")
@@ -55,10 +63,13 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
 
     @FindBy(css = "#opc-sidebar .title[data-role='title']")
     private ExtendedWebElement toggleProductListButton;
+
     @FindBy(css = "#opc-sidebar .items-in-cart [role='heading'] > span:first-child")
     protected ExtendedWebElement productsInCartCount;
+
     @FindBy(css = "#opc-sidebar .minicart-items-wrapper")
     private ExtendedWebElement productsWrapper;
+
     // TODO replace with custom element
     @FindBy(css = "#opc-sidebar .product-item-name")
     private List<ExtendedWebElement> productNames;
