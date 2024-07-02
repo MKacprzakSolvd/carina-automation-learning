@@ -25,11 +25,11 @@ public class ProductFilterBase extends AbstractUIObject {
     public List<String> getOptions() {
         // expand options to avoid waiting for visibility added by Carina
         expand();
-        List<String> options = this.options.stream()
+        List<String> textOptions = this.options.stream()
                 .map(extendedWebElement -> extendedWebElement.getAttribute("option-label"))
                 .toList();
         collapse();
-        return options;
+        return textOptions;
     }
 
     /**
