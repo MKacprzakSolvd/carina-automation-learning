@@ -80,7 +80,7 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     }
 
 
-    protected ProductFilterBase getFilterComponent(ProductsFilterType productsFilterType) {
+    protected ProductFilterBase getProductFilterComponent(ProductsFilterType productsFilterType) {
         return switch (productsFilterType) {
             case COLOR -> this.colorFilter;
             case SIZE -> this.sizeFilter;
@@ -112,13 +112,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public List<String> getFilterOptions(ProductsFilterType productsFilterType) {
-        return getFilterComponent(productsFilterType).getOptions();
+    public List<String> getProductFilterOptions(ProductsFilterType productsFilterType) {
+        return getProductFilterComponent(productsFilterType).getOptions();
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public ProductsPageBase filterBy(ProductsFilterType productsFilterType, String option) {
-        return getFilterComponent(productsFilterType).filterBy(option, this.relativeUrl);
+    public ProductsPageBase filterProductsBy(ProductsFilterType productsFilterType, String option) {
+        return getProductFilterComponent(productsFilterType).filterProductsBy(option, this.relativeUrl);
     }
 
     public SortOrder getSortOrder() {

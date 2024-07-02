@@ -52,7 +52,7 @@ public class ProductFilterBase extends AbstractUIObject {
         return getRootExtendedElement().getAttribute("class").contains("active");
     }
 
-    public ProductsPageBase filterBy(String option, String relativeUrl) {
+    public ProductsPageBase filterProductsBy(String option, String relativeUrl) {
         expand();
         for (ExtendedWebElement optionElement : this.options) {
             if (optionElement.getAttribute("option-label").equals(option)) {

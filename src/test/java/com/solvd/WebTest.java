@@ -78,9 +78,9 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // filter by random size
         String randomlySelectedSize = RandomPicker.getRandomElement(
-                productsPage.getFilterOptions(ProductsFilterType.SIZE)
+                productsPage.getProductFilterOptions(ProductsFilterType.SIZE)
         );
-        productsPage = productsPage.filterBy(ProductsFilterType.SIZE, randomlySelectedSize);
+        productsPage = productsPage.filterProductsBy(ProductsFilterType.SIZE, randomlySelectedSize);
         productsPage.assertPageOpened();
 
         // make sure that correct size is selected for every element
@@ -101,9 +101,9 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // filter by random color
         String randomlySelectedColor = RandomPicker.getRandomElement(
-                productsPage.getFilterOptions(ProductsFilterType.COLOR)
+                productsPage.getProductFilterOptions(ProductsFilterType.COLOR)
         );
-        productsPage = productsPage.filterBy(ProductsFilterType.COLOR, randomlySelectedColor);
+        productsPage = productsPage.filterProductsBy(ProductsFilterType.COLOR, randomlySelectedColor);
         productsPage.assertPageOpened();
 
         // make sure that for every element correct size and color is selected
