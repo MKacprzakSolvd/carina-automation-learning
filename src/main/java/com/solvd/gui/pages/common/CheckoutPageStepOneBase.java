@@ -128,7 +128,7 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
         openProductsList();
         waitForJSToLoad(30);
         return productNames.stream()
-                .map(webElement -> webElement.getText())
+                .map(ExtendedWebElement::getText)
                 .anyMatch(title -> title.equals(product.getName()));
     }
 

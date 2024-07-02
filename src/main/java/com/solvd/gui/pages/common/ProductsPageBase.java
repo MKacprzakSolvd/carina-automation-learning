@@ -107,7 +107,7 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
 
     public List<Product> getProducts() {
         return this.productCards.stream()
-                .map(productCard -> productCard.getProductData())
+                .map(ProductCardBase::getProductData)
                 .toList();
     }
 
