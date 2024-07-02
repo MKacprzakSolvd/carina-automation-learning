@@ -177,7 +177,7 @@ public class ShoppingCartBase extends AbstractUIObject {
         @FindBy(css = ".price-excluding-tax .price")
         private ExtendedWebElement productPrice;
 
-        @FindBy(css = ".delete")
+        @FindBy(className = "delete")
         private ExtendedWebElement productDeleteButton;
 
         public ShoppingCartProduct(WebDriver driver) {

@@ -50,9 +50,9 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     private ShoppingCartBase shoppingCart;
 
     // there are two elements with id 'sorter', so this locator is required
-    @FindBy(css = "#authenticationPopup + .toolbar-products #sorter")
+    @FindBy(xpath = "(//*[@id='sorter'])[1]")
     private ExtendedWebElement sortTypeSelector;
-    @FindBy(css = "#authenticationPopup + .toolbar-products [data-role='direction-switcher']")
+    @FindBy(xpath = "(//*[@data-role='direction-switcher'])[1]")
     private ExtendedWebElement sortDirectionSelector;
 
 

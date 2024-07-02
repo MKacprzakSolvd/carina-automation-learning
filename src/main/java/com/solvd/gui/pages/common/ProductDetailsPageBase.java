@@ -15,8 +15,8 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
     @FindBy(xpath = "//*[contains(@class,'page-header')]//*[@data-block='minicart']")
     private ShoppingCartBase shoppingCart;
 
-    @FindBy(xpath = "//*[@role='alert']/*/*")
-    private List<ExtendedWebElement> alerts;
+    @FindBy(xpath = "//*[@role='alert']/div[contains(@class,'message-success')]/div")
+    private List<ExtendedWebElement> successAlerts;
 
     @FindBy(xpath = "//*[contains(@class,'product-info-main')]//*[@itemprop='name']")
     private ExtendedWebElement productName;
@@ -123,7 +123,7 @@ public abstract class ProductDetailsPageBase extends AbstractPage {
     public boolean isReviewAddedSuccessfullyAlertShown() {
         // FIXME somewhat flaky method
         waitForJSToLoad();
-        for (ExtendedWebElement message : this.alerts) {
+        for (ExtendedWebElement message : this.successAlerts) {
             if (message.getText().equals("You submitted your review for moderation.")) {
                 return true;
             }

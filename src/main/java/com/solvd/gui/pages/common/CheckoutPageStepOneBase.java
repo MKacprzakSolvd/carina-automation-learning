@@ -18,38 +18,38 @@ public abstract class CheckoutPageStepOneBase extends AbstractPage {
     private ExtendedWebElement emailField;
 
     // name fields
-    @FindBy(xpath = "//*[@name='shippingAddress.firstname']//*[@name='firstname']")
+    @FindBy(xpath = "//*[@name='firstname']")
     private ExtendedWebElement firstNameField;
-    @FindBy(xpath = "//*[@name='shippingAddress.lastname']//*[@name='lastname']")
+    @FindBy(xpath = "//*[@name='lastname']")
     private ExtendedWebElement lastNameField;
 
-    @FindBy(xpath = "//*[@name='shippingAddress.company']//*[@name='company']")
+    @FindBy(xpath = "//*[@name='company']")
     private ExtendedWebElement companyField;
 
     // address fields
-    @FindBy(xpath = "//*[@name='shippingAddress.street.0']//*[@name='street[0]']")
+    @FindBy(xpath = "//*[@name='street[0]']")
     private ExtendedWebElement addressLine1Field;
-    @FindBy(xpath = "//*[@name='shippingAddress.street.1']//*[@name='street[1]']")
+    @FindBy(xpath = "//*[@name='street[1]']")
     private ExtendedWebElement addressLine2Field;
-    @FindBy(xpath = "//*[@name='shippingAddress.street.2']//*[@name='street[2]']")
+    @FindBy(xpath = "//*[@name='street[2]']")
     private ExtendedWebElement addressLine3Field;
 
-    @FindBy(xpath = "//*[@name='shippingAddress.city']//*[@name='city']")
+    @FindBy(xpath = "//*[@name='city']")
     private ExtendedWebElement cityField;
 
     // state/province is either dropdown or field, depending on country
-    @FindBy(xpath = "//*[@name='shippingAddress.region_id']//*[@name='region_id']")
+    @FindBy(xpath = "//*[@name='region_id']")
     private ExtendedWebElement provinceDropdown;
-    @FindBy(xpath = "//*[@name='shippingAddress.region']//*[@name='region']")
+    @FindBy(xpath = "//*[@name='region']")
     private ExtendedWebElement provinceField;
 
-    @FindBy(xpath = "//*[@name='shippingAddress.postcode']//*[@name='postcode']")
+    @FindBy(xpath = "//*[@name='postcode']")
     private ExtendedWebElement postalCodeField;
 
-    @FindBy(xpath = "//*[@name='shippingAddress.country_id']//*[@name='country_id']")
+    @FindBy(xpath = "//*[@name='country_id']")
     private ExtendedWebElement countryDropdown;
 
-    @FindBy(xpath = "//*[@name='shippingAddress.telephone']//*[@name='telephone']")
+    @FindBy(xpath = "//*[@name='telephone']")
     private ExtendedWebElement phoneNumberField;
 
     // shipping rates
