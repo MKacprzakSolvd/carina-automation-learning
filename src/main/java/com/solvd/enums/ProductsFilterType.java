@@ -1,6 +1,6 @@
 package com.solvd.enums;
 
-public enum ProductsFilter {
+public enum ProductsFilterType {
     SIZE,
     COLOR;
 }

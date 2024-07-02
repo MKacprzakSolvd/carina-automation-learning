@@ -1,7 +1,7 @@
 package com.solvd.gui.pages.common;
 
 import com.solvd.enums.ProductCategory;
-import com.solvd.enums.ProductsFilter;
+import com.solvd.enums.ProductsFilterType;
 import com.solvd.enums.SortOrder;
 import com.solvd.gui.pages.common.components.ProductCardBase;
 import com.solvd.gui.pages.common.components.ProductFilterBase;
@@ -80,11 +80,11 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     }
 
 
-    protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
-        return switch (productsFilter) {
+    protected ProductFilterBase getFilterComponent(ProductsFilterType productsFilterType) {
+        return switch (productsFilterType) {
             case COLOR -> this.colorFilter;
             case SIZE -> this.sizeFilter;
-            default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilter.name());
+            default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilterType.name());
         };
     }
 
@@ -112,13 +112,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public List<String> getFilterOptions(ProductsFilter productsFilter) {
-        return getFilter(productsFilter).getOptions();
+    public List<String> getFilterOptions(ProductsFilterType productsFilterType) {
+        return getFilterComponent(productsFilterType).getOptions();
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public ProductsPageBase filterBy(ProductsFilter productsFilter, String option) {
-        return getFilter(productsFilter).filterBy(option, this.relativeUrl);
+    public ProductsPageBase filterBy(ProductsFilterType productsFilterType, String option) {
+        return getFilterComponent(productsFilterType).filterBy(option, this.relativeUrl);
     }
 
     public SortOrder getSortOrder() {

@@ -2,7 +2,7 @@ package com.solvd;
 
 
 import com.solvd.enums.ProductCategory;
-import com.solvd.enums.ProductsFilter;
+import com.solvd.enums.ProductsFilterType;
 import com.solvd.enums.SortOrder;
 import com.solvd.gui.pages.common.*;
 import com.solvd.gui.pages.common.components.ProductCardBase;
@@ -78,9 +78,9 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // filter by random size
         String randomlySelectedSize = RandomPicker.getRandomElement(
-                productsPage.getFilterOptions(ProductsFilter.SIZE)
+                productsPage.getFilterOptions(ProductsFilterType.SIZE)
         );
-        productsPage = productsPage.filterBy(ProductsFilter.SIZE, randomlySelectedSize);
+        productsPage = productsPage.filterBy(ProductsFilterType.SIZE, randomlySelectedSize);
         productsPage.assertPageOpened();
 
         // make sure that correct size is selected for every element
@@ -101,9 +101,9 @@ public class WebTest extends TestWithPropertiesSelector {
 
         // filter by random color
         String randomlySelectedColor = RandomPicker.getRandomElement(
-                productsPage.getFilterOptions(ProductsFilter.COLOR)
+                productsPage.getFilterOptions(ProductsFilterType.COLOR)
         );
-        productsPage = productsPage.filterBy(ProductsFilter.COLOR, randomlySelectedColor);
+        productsPage = productsPage.filterBy(ProductsFilterType.COLOR, randomlySelectedColor);
         productsPage.assertPageOpened();
 
         // make sure that for every element correct size and color is selected
