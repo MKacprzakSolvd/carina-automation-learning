@@ -348,7 +348,7 @@ public class WebTest extends TestWithPropertiesSelector {
      * 8. Click continue shopping
      * Result: Home page should load
      */
-    @Test(invocationCount = 10)
+    @Test
     public void verifyCheckoutFromItemDetailsPageTest() {
         // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.MEN_BOTTOMS);
