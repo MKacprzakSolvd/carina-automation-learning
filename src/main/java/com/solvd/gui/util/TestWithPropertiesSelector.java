@@ -20,7 +20,7 @@ public abstract class TestWithPropertiesSelector extends AbstractTest {
         CapabilitiesLoader capabilitiesLoader = new CapabilitiesLoader();
         Optional<String> testPropertiesType = getTestPropertiesType(context);
         testPropertiesType.ifPresent(
-                propType -> capabilitiesLoader.loadCapabilities("_config-%s.properties".formatted(propType))
+                propType -> capabilitiesLoader.loadCapabilities("_config-%s.properties".formatted(propType), true)
         );
     }
 
