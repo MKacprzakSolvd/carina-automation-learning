@@ -168,7 +168,7 @@ public class WebTest extends TestWithPropertiesSelector {
         List<Product> selectedProducts = RandomPicker.getRandomElements(
                 productsPage.getProducts(), PRODUCTS_TO_ADD_TO_CART_NUMBER);
 
-        // add them to cart
+        // add selected products to cart
         for (Product product : selectedProducts) {
             Optional<ProductCardBase> productCard = productsPage.findProductCard(product);
             softAssert.assertTrue(productCard.isPresent(),
@@ -176,6 +176,7 @@ public class WebTest extends TestWithPropertiesSelector {
                             .formatted(product.getName()));
             productCard.ifPresent(ProductCardBase::addToCart);
         }
+
         // check if they were added
         // 1. check if number of products in cart is as expected
         int itemsInShoppingCart = productsPage.getShoppingCart().getProductsCount();
@@ -202,7 +203,6 @@ public class WebTest extends TestWithPropertiesSelector {
             softAssert.assertTrue(productsPage.getShoppingCart().removeFromCart(product),
                     "Failed to remove product '%s' from shopping cart.".formatted(product.getName()));
         }
-
         softAssert.assertTrue(productsPage.getShoppingCart().isEmpty(),
                 "Shopping cart is not empty.");
 
@@ -255,7 +255,7 @@ public class WebTest extends TestWithPropertiesSelector {
         CheckoutPageStepOneBase checkoutPageStepOne = productsPage.getShoppingCart().goToCheckout();
         checkoutPageStepOne.assertPageOpened();
 
-        // complete first step of checkout
+        // verify & complete first step of checkout
         int productsInShoppingCart = checkoutPageStepOne.getProductsCount();
         assertEquals(productsInShoppingCart, 1,
                 "%d products in shopping car, while expecting only one, during the first step of checkout."
@@ -269,6 +269,7 @@ public class WebTest extends TestWithPropertiesSelector {
                 ShippingInfoProvider.provideValidShippingInfo());
         checkoutPageStepTwo.assertPageOpened();
 
+        // complete second & third step of the checkout
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
         checkoutPageStepThree.assertPageOpened();
 
@@ -298,16 +299,19 @@ public class WebTest extends TestWithPropertiesSelector {
     public void verifyItemSortingTest() {
         SoftAssert softAssert = new SoftAssert();
 
+        // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.WOMEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
 
+        // select sort orders to check
         SortOrder[] sortOrdersToCheck = new SortOrder[]{
                 SortOrder.BY_NAME_A_TO_Z,
                 SortOrder.BY_NAME_Z_TO_A,
                 SortOrder.BY_PRICE_ASCENDING,
                 SortOrder.BY_PRICE_DESCENDING};
 
+        // check each sort order
         for (SortOrder sortOrder : sortOrdersToCheck) {
             productsPage = productsPage.setSortOrder(sortOrder);
             softAssert.assertTrue(productsPage.isSortedBy(sortOrder),
@@ -316,11 +320,6 @@ public class WebTest extends TestWithPropertiesSelector {
         }
         // TODO: go to the next page and check sorting (step 5)
 
-        /*
-            sorting by price (ascending and descending)
-            will fail, page sorts incorrectly (usually last
-            items are in the wrong order)
-         */
         softAssert.assertAll();
     }
 
@@ -349,8 +348,9 @@ public class WebTest extends TestWithPropertiesSelector {
      * 8. Click continue shopping
      * Result: Home page should load
      */
-    @Test
+    @Test(invocationCount = 10)
     public void verifyCheckoutFromItemDetailsPageTest() {
+        // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.MEN_BOTTOMS);
         productsPage.open();
         productsPage.assertPageOpened();
@@ -363,7 +363,7 @@ public class WebTest extends TestWithPropertiesSelector {
                 productsPage.getProductCards());
         Product selectedProduct = selectedProductCard.getProductData();
 
-        // open product details page
+        // open details page of selected product
         ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
         assertTrue(productDetailsPage.isPageForElement(selectedProduct),
                 "Opened details page is not for product '%s'.".formatted(selectedProduct.getName()));
@@ -393,6 +393,7 @@ public class WebTest extends TestWithPropertiesSelector {
                 ShippingInfoProvider.provideValidShippingInfo());
         checkoutPageStepTwo.assertPageOpened();
 
+        // complete second & third step of checkout
         CheckoutPageStepThreeBase checkoutPageStepThree = checkoutPageStepTwo.placeOrder();
         checkoutPageStepThree.assertPageOpened();
 
@@ -417,6 +418,7 @@ public class WebTest extends TestWithPropertiesSelector {
      */
     @Test
     public void verifyAddingItemReviewTest() {
+        // open products page
         ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.GEAR_FITNESS_EQUIPMENT);
         productsPage.open();
         productsPage.assertPageOpened();
@@ -430,16 +432,14 @@ public class WebTest extends TestWithPropertiesSelector {
         ProductDetailsPageBase productDetailsPage = selectedProductCard.goToProductDetailsPage();
         assertTrue(productDetailsPage.isPageForElement(selectedProduct));
 
+        // add review
         Review review = Review.builder()
                 .rating(5)
                 .userNickname("user")
                 .summary("generally ok")
                 .reviewContent("product seems to be good and solid while having reasonable price")
                 .build();
-
-        // add review
         productDetailsPage = productDetailsPage.addReview(review);
-        //productDetailsPage.assertPageOpened();
 
         // check if review was added
         assertTrue(productDetailsPage.isReviewAddedSuccessfullyAlertShown(),

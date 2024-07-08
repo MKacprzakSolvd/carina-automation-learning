@@ -66,16 +66,14 @@ public class ContextSwitchingTest extends AbstractTest {
         assertTrue(productDetailsPage.isPageForElement(selectedProduct),
                 "Opened details page is not for product '%s'.".formatted(selectedProduct.getName()));
 
+        // add review
         Review review = Review.builder()
                 .rating(5)
                 .userNickname("user")
                 .summary("generally ok")
                 .reviewContent("product seems to be good and solid while having reasonable price")
                 .build();
-
-        // add review
         productDetailsPage = productDetailsPage.addReview(review);
-        //productDetailsPage.assertPageOpened();
 
         // check if review was added
         assertTrue(productDetailsPage.isReviewAddedSuccessfullyAlertShown(),
