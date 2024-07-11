@@ -39,7 +39,7 @@ public class WebBrowserPage extends WebBrowserPageBase {
         Set<String> windowHandlesAfterNewTab = getDriver().getWindowHandles();
         String newWindowHandle = windowHandlesAfterNewTab.stream()
                 .filter(str -> !windowHandlesBeforeNewTab.contains(str))
-                .findFirst().get();
+                .findAny().get();
         getDriver().switchTo().window(newWindowHandle);
 
         //open url

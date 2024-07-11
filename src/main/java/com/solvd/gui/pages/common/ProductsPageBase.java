@@ -1,7 +1,7 @@
 package com.solvd.gui.pages.common;
 
 import com.solvd.enums.ProductCategory;
-import com.solvd.enums.ProductsFilter;
+import com.solvd.enums.ProductsFilterType;
 import com.solvd.enums.SortOrder;
 import com.solvd.gui.pages.common.components.ProductCardBase;
 import com.solvd.gui.pages.common.components.ProductFilterBase;
@@ -19,10 +19,16 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
-    ProductCategory productCategory;
+    @Getter
+    private String relativeUrl;
 
     @FindBy(css = ".products .product-items .product-item")
     private List<ProductCardBase> productCards;
+
+    // this element is used as load marker, and > selector is used in order to
+    // distinguish between search and products page
+    @FindBy(css = ".main > .products.wrapper")
+    private ExtendedWebElement productsWrapper;
 
     // TODO: extract string 'Size' and 'Color' from this and move it somewhere else (as constant)?
     // select filter block that have 'Size' in title
@@ -44,29 +50,42 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
     private ShoppingCartBase shoppingCart;
 
     // there are two elements with id 'sorter', so this locator is required
-    @FindBy(css = "#authenticationPopup + .toolbar-products #sorter")
+    @FindBy(xpath = "(//*[@id='sorter'])[1]")
     private ExtendedWebElement sortTypeSelector;
-    @FindBy(css = "#authenticationPopup + .toolbar-products [data-role='direction-switcher']")
+    @FindBy(xpath = "(//*[@data-role='direction-switcher'])[1]")
     private ExtendedWebElement sortDirectionSelector;
 
 
-    public ProductsPageBase(WebDriver driver, ProductCategory productCategory) {
+    public ProductsPageBase(WebDriver driver) {
         super(driver);
-        this.productCategory = productCategory;
-        setPageURL(productCategory.getRelativeUrl());
-        setUiLoadedMarker(this.sortDirectionSelector);
+        setUiLoadedMarker(this.productsWrapper);
     }
 
-    protected ProductFilterBase getFilter(ProductsFilter productsFilter) {
-        return switch (productsFilter) {
+    public ProductsPageBase(WebDriver driver, String relativeUrl) {
+        this(driver);
+        if (relativeUrl == null) {
+            throw new IllegalArgumentException("relativeUrl cannot be null");
+        }
+        this.relativeUrl = relativeUrl;
+        setPageURL(this.relativeUrl);
+    }
+
+
+    public ProductsPageBase(WebDriver driver, ProductCategory productCategory) {
+        this(driver,
+                // hacky way to check for null pointer
+                Optional.ofNullable(
+                        productCategory.getRelativeUrl()
+                ).orElseThrow(() -> new IllegalArgumentException("productCategory cannot be null")));
+    }
+
+
+    protected ProductFilterBase getProductFilterComponent(ProductsFilterType productsFilterType) {
+        return switch (productsFilterType) {
             case COLOR -> this.colorFilter;
             case SIZE -> this.sizeFilter;
-            default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilter.name());
+            default -> throw new IllegalArgumentException("Unknown enum value: " + productsFilterType.name());
         };
-    }
-
-    private ProductCategory getProductCategory() {
-        return productCategory;
     }
 
     public List<ProductCardBase> getProductCards() {
@@ -88,18 +107,18 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
 
     public List<Product> getProducts() {
         return this.productCards.stream()
-                .map(productCard -> productCard.getProductData())
+                .map(ProductCardBase::getProductData)
                 .toList();
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public List<String> getFilterOptions(ProductsFilter productsFilter) {
-        return getFilter(productsFilter).getOptions();
+    public List<String> getProductFilterOptions(ProductsFilterType productsFilterType) {
+        return getProductFilterComponent(productsFilterType).getOptions();
     }
 
     // FIXME: add support for case where filter is used (and thus inaccessible)
-    public ProductsPageBase filterBy(ProductsFilter productsFilter, String option) {
-        return getFilter(productsFilter).filterBy(option, getProductCategory());
+    public ProductsPageBase filterProductsBy(ProductsFilterType productsFilterType, String option) {
+        return getProductFilterComponent(productsFilterType).filterProductsBy(option, this.relativeUrl);
     }
 
     public SortOrder getSortOrder() {
@@ -121,13 +140,13 @@ public abstract class ProductsPageBase extends AbstractComponentSelectingPage {
         // select correct sort type
         if (!currentSortOrder.getValue().equals(sortOrder.getValue())) {
             this.sortTypeSelector.select(sortOrder.getValue());
-            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), this.relativeUrl);
         }
 
         // select correct sort direction
         if (currentSortOrder.isAscending() != sortOrder.isAscending()) {
             this.sortDirectionSelector.click();
-            productsPage = initPage(getDriver(), ProductsPageBase.class, getProductCategory());
+            productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), this.relativeUrl);
         }
 
         return productsPage;

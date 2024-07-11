@@ -47,7 +47,7 @@ public class ContextSwitchingTest extends AbstractTest {
 
     @Test
     public void verifyAddingItemReviewInNewCardTest() {
-        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, ProductCategory.GEAR_FITNESS_EQUIPMENT);
+        ProductsPageBase productsPage = initPage(getDriver(), ProductsPageBase.class, getDriver(), ProductCategory.GEAR_FITNESS_EQUIPMENT);
         productsPage.open();
         productsPage.assertPageOpened();
 
@@ -63,18 +63,17 @@ public class ContextSwitchingTest extends AbstractTest {
 
         // open product details page
         ProductDetailsPageBase productDetailsPage = initPage(getDriver(), ProductDetailsPageBase.class);
-        assertTrue(productDetailsPage.isForElement(selectedProduct));
+        assertTrue(productDetailsPage.isPageForElement(selectedProduct),
+                "Opened details page is not for product '%s'.".formatted(selectedProduct.getName()));
 
+        // add review
         Review review = Review.builder()
                 .rating(5)
                 .userNickname("user")
                 .summary("generally ok")
                 .reviewContent("product seems to be good and solid while having reasonable price")
                 .build();
-
-        // add review
         productDetailsPage = productDetailsPage.addReview(review);
-        //productDetailsPage.assertPageOpened();
 
         // check if review was added
         assertTrue(productDetailsPage.isReviewAddedSuccessfullyAlertShown(),

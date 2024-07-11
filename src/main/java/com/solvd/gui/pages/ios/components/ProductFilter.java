@@ -12,7 +12,7 @@ import org.openqa.selenium.support.FindBy;
 public class ProductFilter extends ProductFilterBase {
     // this element is outside ProductFilter element, so xpath starts with //
     @FindBy(xpath = "//*[contains(@class, 'filter-title')]//*[@data-role='title']")
-    ExtendedWebElement filtersOpenButton;
+    private ExtendedWebElement filtersOpenButton;
 
     public ProductFilter(WebDriver driver, SearchContext searchContext) {
         super(driver, searchContext);
